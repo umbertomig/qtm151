@@ -64,6 +64,8 @@ options(repos = r)
 
 * By Tuesday I'll post on Canvas how to connect R with Github.
 
+* The quiz will be posted today, at 4:00PM
+
 * Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
@@ -290,6 +292,31 @@ qplot(PErisk$gdpw2, PErisk$barb2, geom = "point") +
 
 * **Your turn**: make a Scatter-Plot with smooth line for the `totbill` and the `tips` variables in the `tips` dataset.
 
+]
+
+---
+
+# qplot - Scatter-Plot (segmented)
+
+.font130[
+
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=8, warning=FALSE}
+qplot(PErisk$gdpw2, PErisk$barb2, geom = "point", color = factor(PErisk$courts))
+```
+
+* **Your turn**: make a segmented scatter-plot with smooth line for the `totbill` and the `tips`, by `smoker`.
+]
+
+---
+# qplot - Scatter-Plot (faceted)
+
+.font130[
+
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=8, warning=FALSE}
+qplot(gdpw2, barb2, geom = "point", facets = . ~ courts, data = PErisk)
+```
+
+* **Your turn**: make a faceted scatter-plot for the `totbill` and the `tips`, faceting by `smoker`.
 ]
 
 ---

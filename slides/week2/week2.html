@@ -66,6 +66,8 @@ class: center, middle, inverse, title-slide
 
 * By Tuesday I'll post on Canvas how to connect R with Github.
 
+* The quiz will be posted today, at 4:00PM
+
 * Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
@@ -351,6 +353,37 @@ qplot(PErisk$gdpw2, PErisk$barb2, geom = "point") +
 
 ---
 
+# qplot - Scatter-Plot (segmented)
+
+.font130[
+
+
+```r
+qplot(PErisk$gdpw2, PErisk$barb2, geom = "point", color = factor(PErisk$courts))
+```
+
+&lt;img src="week2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+* **Your turn**: make a segmented scatter-plot with smooth line for the `totbill` and the `tips`, by `smoker`.
+]
+
+---
+# qplot - Scatter-Plot (faceted)
+
+.font130[
+
+
+```r
+qplot(gdpw2, barb2, geom = "point", facets = . ~ courts, data = PErisk)
+```
+
+&lt;img src="week2_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+* **Your turn**: make a faceted scatter-plot for the `totbill` and the `tips`, faceting by `smoker`.
+]
+
+---
+
 class: inverse, center, middle
 
 # Plot for Continuous x Discrete Variables
@@ -369,7 +402,7 @@ qplot(x = factor(PErisk$courts), y = PErisk$gdpw2,
       geom = "boxplot")
 ```
 
-&lt;img src="week2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="week2_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 * **Your turn**: make a box-plot of the `tips` variable by `smoker` in the `tips` dataset.
 
