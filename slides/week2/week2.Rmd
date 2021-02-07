@@ -8,9 +8,9 @@ output:
     css: [default, metropolis, metropolis-fonts]
     mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
     nature: 
-      beforeInit: "../wmisc/macros.js"
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
       highlightStyle: github
-      ratio: 14:9
+      ratio: 4:3
       highlightLines: true
       countIncrementalSlides: false
       slideNumberFormat: |
@@ -177,7 +177,6 @@ head(tips, 2)
 PErisk <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv')
 head(PErisk, 2)
 ```
-
 ]
 
 ---
@@ -187,7 +186,6 @@ class: inverse, center, middle
 # Plots for Continuous Variables
 
 <html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
-
 
 ---
 
