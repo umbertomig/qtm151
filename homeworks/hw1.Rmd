@@ -1,0 +1,57 @@
+---
+title: "Homework 1 -- QTM 151"
+author: "Your name here"
+output: html_document
+---
+
+## Instructions:
+
+**Due:** 02/15 at 11:59PM.
+
+**What am I expecting?** An R Markdown and the compiled HTML with the answers.
+
+**Have fun!**
+
+Use `qplot()` function to create plots about `diamonds`. The data set diamonds is built in the package
+`ggplot2`.
+
+To get started:
+
+```{r}
+library(tidyverse)
+data(diamonds)
+```
+
+**1**. Make a small random subset of diamonds and name it as `dsmall`.
+
+```{r}
+# your answers here
+```
+
+**2**. Show the distribution of carat with a histogram, set binwidth to 0.1 and limits for the x-axis from 0
+to 3.
+
+```{r}
+# your answers here
+```
+
+**3**. Show the distribution of carat with a *density plot*, set the color to the variable `color`.
+
+```{r}
+# your answers here
+```
+
+**4**. Produce a scatter-plot showing the relationship between *carat* and *price*, set point shape to the
+variable cut, set point transparency to 0.1, and describe the trend of the scatter-plot.
+
+```{r}
+# your answers here
+```
+
+**5**. Make another scatter-plot between *carat* and *price*, add jitters to points, set point transparency to
+0.1, apply log transformation to the x and y axes variables, and add a smooth line to the plot, then
+describe the trend of the scatter-plot.
+
+```{r}
+# your answers here
+```
