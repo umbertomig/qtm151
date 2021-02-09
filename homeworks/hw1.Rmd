@@ -12,6 +12,8 @@ output: html_document
 
 **Have fun!**
 
+## Homework 1
+
 Use `qplot()` function to create plots about `diamonds`. The data set diamonds is built in the package
 `ggplot2`.
 
