@@ -261,7 +261,9 @@ ggplotly(p)
 
 ```{r, echo = FALSE, warning=FALSE}
 ggplotly(p) %>%
-  animation_opts(transition = 500, easing = "linear", mode = "immediate")
+  animation_opts(transition = 500, 
+                 easing = "linear", 
+                 mode = "immediate")
 ```
 
 ---
