@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>QTM 151</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Umberto Mignozzetti" />
+    <script src="week5_files/header-attrs/header-attrs.js"></script>
+    <link href="week5_files/remark-css/default.css" rel="stylesheet" />
+    <link href="week5_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="week5_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# QTM 151
+## Week 5 – dplyr
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#f2a900' size=1px width=800px>
+</html>
+### Umberto Mignozzetti
+### Feb 26
+
+---
+
+
+
+
+&lt;style&gt;
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+&lt;/style&gt;
+
+# Recap
+
+.font130[
+
+* We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly`: transform ggplot objects into nice plotly viz.
+ + `plot_ly`: create nice plotly graphs.
+
+* Do you have any questions about any of these functions?
+
+* The quiz will be posted today, at 4:00PM
+
+* Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+# Today's Agenda
+
+.font130[
+
+`dplyr` package for data manipulation: 
+* Observation/row:
+    + filter
+    + arrange
+* Variable/column:
+    + select
+    + rename
+    + mutate
+* Get summaries:
+    + summarise
+    + group_by: changes the scope of each function from operating on the entire dataset to operating on it group-by-group
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+
+```r
+# Loading tidyverse
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+```
+
+```
+## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+]
+
+---
+
+# Loading datasets
+
+.font130[
+
+```r
+# Loading tips dataset
+tips &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv') # or your locale folder
+head(tips, 2)
+```
+
+```
+##   obs totbill  tip sex smoker day  time size
+## 1   1   16.99 1.01   F     No Sun Night    2
+## 2   2   10.34 1.66   M     No Sun Night    3
+```
+
+```r
+# Loading PErisk dataset
+PErisk &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
+head(PErisk, 2)
+```
+
+```
+##     country courts      barb2 prsexp2 prscorr2    gdpw2
+## 1 Argentina      0 -0.7207754       1        3  9.69017
+## 2 Australia      1 -6.9077550       5        4 10.30484
+```
+]
+
+---
+class: inverse, center, middle
+
+# select: variable selection
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# select: variable selection
+
+.font130[
+
+* Suppose we want to select only the numeric variables in the `PErisk` dataset.
+
+* We do the following:
+
+
+```r
+PErisk_num &lt;- select(PErisk, barb2, gdpw2)
+head(PErisk_num, 2)
+```
+
+```
+##        barb2    gdpw2
+## 1 -0.7207754  9.69017
+## 2 -6.9077550 10.30484
+```
+
+* The syntax to use the `select` is the following:
+
+```
+dat_final &lt;- select(dat_initial, var1, var2, var3, ...)
+```
+**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
+
+]
+
+---
+
+# select: variable selection
+
+.font130[
+
+* We can select slices and by characteristics. For example:
+
+```
+aux &lt;- select(PErisk, country, gdpw2)
+
+aux &lt;- PErisk %&gt;%
+  select(country,gdpw2)
+
+aux &lt;- select(PErisk, -c(courts, prsexp2, prscorr2))
+aux &lt;- select(PErisk, courts:prsexp2)
+aux &lt;- select(PErisk, starts_with("co"))
+```
+
+]
+
+---
+
+# select: variable selection
+
+.font130[
+
+* And the methods we can apply in the select are the following:
+
+| Method             | Effect                                          |
+|--------------------|-------------------------------------------------|
+| v1, v2, v3 (etc)   | Select given variables                          |
+| starts_with('xyz') | Select starting with `xyz`                      |
+| ends_with('xyz')   | Select ending with `xyz`                        |
+| contains('xyz')    | Select variables that have `xyz` in their names |
+| vk:vn              | All variables between `vn` and `vk`             |
+| -(vk:vn)           | All but `vk` to `vn`                            |
+
+
+* We can even rename variables using `select`.
+]
+
+---
+
+class: inverse, center, middle
+
+# rename: change names variables
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# rename: change names variables
+
+.font130[
+
+* We can change the names of the variables using `rename`.
+
+* Basic syntax:
+
+```
+new_dat &lt;- rename(dat, 
+                  new_name1 = old_name1,
+                  new_name2 = old_name2,
+                  ...)
+```
+
+Let's rename the `PErisk` courts to `indep_judiciary`:
+
+
+```r
+PErisk_new &lt;- rename(PErisk, 
+                     indep_judiciary = courts)
+head(PErisk_new, 2)
+```
+
+```
+##     country indep_judiciary      barb2 prsexp2 prscorr2    gdpw2
+## 1 Argentina               0 -0.7207754       1        3  9.69017
+## 2 Australia               1 -6.9077550       5        4 10.30484
+```
+
+]
+
+**Your turn**: rename the `totbill` to `totalbill` in the dataset `tips`.
+
+---
+
+
+class: inverse, center, middle
+
+# filter: select pieces of the dataset
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# filter: select pieces of the dataset
+
+.font130[
+
+* We can select desired rows of the dataset using the function `filter`.
+
+* Basic syntax:
+
+```
+new_dat &lt;- filter(dat, condition1, condition2, ...)
+```
+
+Let's filter the `PErisk` to keep all countries without independent judiciary:
+
+
+```r
+PErisk_new &lt;- filter(PErisk, 
+                     courts == 0)
+head(PErisk_new, 2)
+```
+
+```
+##      country courts      barb2 prsexp2 prscorr2    gdpw2
+## 1  Argentina      0 -0.7207754       1        3 9.690170
+## 2 Bangladesh      0  0.7759748       1        0 8.379768
+```
+
+]
+
+---
+
+
+# filter: select pieces of the dataset
+
+.font130[
+
+* The filter operators are the following:
+
+
+```r
+#| Operator | Meaning                                |
+#|----------|----------------------------------------|
+#| &lt; and &lt;= | Smaller than and Smaller than or equal |
+#| &gt; and &gt;= | Greater than and Treated than or equal |
+#| ==       | Equal                                  |
+#| !=       | Different                              |
+#| !        | Negation                               |
+#| |        | Or                                     |
+#| &amp;        | And                                    |
+```
+
+**Your turn**: filter the `tips` dataset, keeping only the tips above $4.52, by Non-smokers.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# arrange: sort the dataset
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# arrange: sort the dataset
+
+.font130[
+
+* We can sort the dataset by levels, according to the needs of our analysis.
+
+* Basic syntax:
+
+```
+new_dat &lt;- arrange(dat, var1, desc(var2), desc(var3), var4, ...)
+```
+
+Let's arrange the `PErisk` by the gdpw2, in descending order:
+
+
+```r
+PErisk_new &lt;- arrange(PErisk,
+                      desc(gdpw2))
+head(PErisk_new, 5)
+```
+
+```
+##       country courts     barb2 prsexp2 prscorr2    gdpw2
+## 1      Canada      1 -6.907755       5        5 10.41018
+## 2 Switzerland      1 -6.907755       5        5 10.34110
+## 3   Australia      1 -6.907755       5        4 10.30484
+## 4      Norway      1 -6.907755       5        5 10.29833
+## 5       Italy      1 -6.907755       4        3 10.26078
+```
+
+**Your turn**: Arrange the `tips` by the size of the tip, in ascending order. See the head and the tail of the arranged data.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# mutate: make transformation in the dataset
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# mutate: make transformation in the dataset
+
+.font130[
+
+* We can make transformations in the dataset using the function `mutate`
+
+* Basic syntax:
+
+```
+new_dat &lt;- mutate(dat, 
+                  new_var = do_something_func(old_var),
+                  ...)
+```
+
+Let's mutate the `PErisk`, to show the gdp in dollars:
+
+
+```r
+PErisk_new &lt;- mutate(PErisk,
+                     gdppc = exp(gdpw2))
+head(PErisk_new, 3)
+```
+
+```
+##     country courts      barb2 prsexp2 prscorr2    gdpw2    gdppc
+## 1 Argentina      0 -0.7207754       1        3  9.69017 16157.99
+## 2 Australia      1 -6.9077550       5        4 10.30484 29876.87
+## 3   Austria      1 -4.9103370       5        4 10.10094 24365.90
+```
+
+**Your turn**: Let's find the percentage of the tips based on the total bill. Divide the tip by the total bill, and multiply by 100. Sort the data by this variable.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# summarise: summaries of the dataset
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# summarise: summaries of the dataset
+
+.font130[
+
+* We can compute summaries of the dataset, performed by a desired variable.
+
+* Basic syntax:
+
+```
+new_dat &lt;- summarise(dat, 
+                     my_summary = do_smt_func(vars),
+                     ...)
+```
+
+Let's compute the mean and standard deviation of the `gdpw2`, and of `barb2`.:
+
+
+```r
+PErisk_new &lt;- mutate(PErisk,
+                     mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
+                     mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
+head(PErisk_new, 3)
+```
+
+```
+##     country courts      barb2 prsexp2 prscorr2    gdpw2 mean_gdp   std_gdp
+## 1 Argentina      0 -0.7207754       1        3  9.69017 9.041875 0.9702639
+## 2 Australia      1 -6.9077550       5        4 10.30484 9.041875 0.9702639
+## 3   Austria      1 -4.9103370       5        4 10.10094 9.041875 0.9702639
+##   mean_barb2 std_barb2
+## 1  -2.925557  2.707211
+## 2  -2.925557  2.707211
+## 3  -2.925557  2.707211
+```
+
+**Your turn**: Compute the mean and standard deviation of the tips.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# summarise and group_by: summaries of the dataset by groups
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# summarise and group_by: summaries of the dataset by groups
+
+.font130[
+
+* We can compute summaries of the dataset, performed by a desired variable.
+
+* Basic syntax:
+
+```
+new_dat &lt;- dat %&gt;%
+  group_by(var_to_group) %&gt;%
+  summarise(my_summary = do_smt_func(vars),
+            ...)
+```
+
+Let's compute the mean and standard deviation of the `gdpw2`, by expropriation risk:
+
+
+```r
+PErisk_new &lt;- PErisk %&gt;% group_by(prsexp2) %&gt;%
+  mutate(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
+head(PErisk_new, 3)
+```
+
+```
+## # A tibble: 3 x 8
+## # Groups:   prsexp2 [2]
+##   country   courts  barb2 prsexp2 prscorr2 gdpw2 mean_gdp std_gdp
+##   &lt;chr&gt;      &lt;int&gt;  &lt;dbl&gt;   &lt;int&gt;    &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Argentina      0 -0.721       1        3  9.69     8.48   1.04 
+## 2 Australia      1 -6.91        5        4 10.3     10.1    0.171
+## 3 Austria        1 -4.91        5        4 10.1     10.1    0.171
+```
+
+**Your turn**: Compute the mean and standard deviation of the tips, grouped by the smoker and non-smoker.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+
+---
+
+class: inverse, center, middle
+
+# Have a great weekend!
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "4:3",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

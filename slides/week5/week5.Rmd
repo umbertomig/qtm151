@@ -1,0 +1,450 @@
+---
+title: "QTM 151"
+subtitle: "Week 5 -- dplyr <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+author: "Umberto Mignozzetti"
+date: "Feb 26"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
+    nature: 
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
+      highlightStyle: github
+      ratio: 4:3
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+r <- getOption("repos")
+r["CRAN"] <- "https://cloud.r-project.org/"
+options(repos = r)
+```
+
+<style>
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+</style>
+
+# Recap
+
+.font130[
+
+* We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly`: transform ggplot objects into nice plotly viz.
+ + `plot_ly`: create nice plotly graphs.
+
+* Do you have any questions about any of these functions?
+
+* The quiz will be posted today, at 4:00PM
+
+* Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+# Today's Agenda
+
+.font130[
+
+`dplyr` package for data manipulation: 
+* Observation/row:
+    + filter
+    + arrange
+* Variable/column:
+    + select
+    + rename
+    + mutate
+* Get summaries:
+    + summarise
+    + group_by: changes the scope of each function from operating on the entire dataset to operating on it group-by-group
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+```{r}
+# Loading tidyverse
+library(tidyverse)
+```
+]
+
+---
+
+# Loading datasets
+
+.font130[
+```{r, tidy=FALSE}
+# Loading tips dataset
+tips <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv') # or your locale folder
+head(tips, 2)
+
+# Loading PErisk dataset
+PErisk <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
+head(PErisk, 2)
+```
+]
+
+---
+class: inverse, center, middle
+
+# select: variable selection
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# select: variable selection
+
+.font130[
+
+* Suppose we want to select only the numeric variables in the `PErisk` dataset.
+
+* We do the following:
+
+```{r}
+PErisk_num <- select(PErisk, barb2, gdpw2)
+head(PErisk_num, 2)
+```
+
+* The syntax to use the `select` is the following:
+
+```
+dat_final <- select(dat_initial, var1, var2, var3, ...)
+```
+**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
+
+]
+
+---
+
+# select: variable selection
+
+.font130[
+
+* We can select slices and by characteristics. For example:
+
+```
+aux <- select(PErisk, country, gdpw2)
+
+aux <- PErisk %>%
+  select(country,gdpw2)
+
+aux <- select(PErisk, -c(courts, prsexp2, prscorr2))
+aux <- select(PErisk, courts:prsexp2)
+aux <- select(PErisk, starts_with("co"))
+```
+
+]
+
+---
+
+# select: variable selection
+
+.font130[
+
+* And the methods we can apply in the select are the following:
+
+| Method             | Effect                                          |
+|--------------------|-------------------------------------------------|
+| v1, v2, v3 (etc)   | Select given variables                          |
+| starts_with('xyz') | Select starting with `xyz`                      |
+| ends_with('xyz')   | Select ending with `xyz`                        |
+| contains('xyz')    | Select variables that have `xyz` in their names |
+| vk:vn              | All variables between `vn` and `vk`             |
+| -(vk:vn)           | All but `vk` to `vn`                            |
+
+* We can even rename variables using `select`.
+]
+
+---
+
+class: inverse, center, middle
+
+# rename: change names variables
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# rename: change names variables
+
+.font130[
+
+* We can change the names of the variables using `rename`.
+
+* Basic syntax:
+
+```
+new_dat <- rename(dat, 
+                  new_name1 = old_name1,
+                  ...)
+```
+
+Let's rename the `PErisk` courts to `indep_judiciary`:
+
+```{r}
+PErisk_new <- rename(PErisk, indep_judiciary = courts)
+head(PErisk_new, 2)
+```
+
+**Your turn**: rename the `totbill` to `totalbill` in the dataset `tips`.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# filter: select pieces of the dataset
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# filter: select pieces of the dataset
+
+.font130[
+
+* We can select desired rows of the dataset using the function `filter`.
+
+* Basic syntax:
+
+```
+new_dat <- filter(dat, condition1, condition2, ...)
+```
+
+Let's filter the `PErisk` to keep all countries without independent judiciary:
+
+```{r}
+PErisk_new <- filter(PErisk, 
+                     courts == 0)
+head(PErisk_new, 2)
+```
+
+]
+
+---
+
+
+# filter: select pieces of the dataset
+
+.font130[
+
+* The filter operators are the following:
+
+```{r}
+#| Operator | Meaning                                |
+#|----------|----------------------------------------|
+#| < and <= | Smaller than and Smaller than or equal |
+#| > and >= | Greater than and Treated than or equal |
+#| ==       | Equal                                  |
+#| !=       | Different                              |
+#| !        | Negation                               |
+#| |        | Or                                     |
+#| &        | And                                    |
+```
+
+**Your turn**: filter the `tips` dataset, keeping only the tips above $4.52, by Non-smokers.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# arrange: sort the dataset
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# arrange: sort the dataset
+
+.font130[
+
+* We can sort the dataset by levels, according to the needs of our analysis.
+
+* Basic syntax:
+
+```
+new_dat <- arrange(dat, var1, desc(var2), desc(var3), var4, ...)
+```
+
+Let's arrange the `PErisk` by the gdpw2, in descending order:
+
+```{r}
+PErisk_new <- arrange(PErisk, desc(gdpw2))
+head(PErisk_new, 2)
+```
+
+**Your turn**: Arrange the `tips` by the size of the tip, in ascending order. See the head and the tail of the arranged data.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# mutate: make transformation in the dataset
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# mutate: make transformation in the dataset
+
+.font130[
+
+* We can make transformations in the dataset using the function `mutate`
+
+* Basic syntax:
+
+```
+new_dat <- mutate(dat, 
+                  new_var = do_something_func(old_var),
+                  ...)
+```
+
+Let's mutate the `PErisk`, to show the gdp in dollars:
+
+```{r}
+PErisk_new <- mutate(PErisk,
+                     gdppc = exp(gdpw2))
+head(PErisk_new, 3)
+```
+
+**Your turn**: Let's find the percentage of the tips based on the total bill. Divide the tip by the total bill, and multiply by 100. Sort the data by this variable.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# summarise: summaries of the dataset
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# summarise: summaries of the dataset
+
+.font130[
+
+* We can compute summaries of the dataset, performed by a desired variable.
+
+* Basic syntax:
+
+```
+new_dat <- summarise(dat, 
+                     my_summary = do_smt_func(vars),
+                     ...)
+```
+
+Let's compute the mean and standard deviation of the `gdpw2`, and of `barb2`.:
+
+```{r}
+PErisk_new <- mutate(PErisk,
+                     mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
+                     mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
+head(PErisk_new, 3)
+```
+
+**Your turn**: Compute the mean and standard deviation of the tips.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# summarise and group_by: summaries of the dataset by groups
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# summarise and group_by: summaries of the dataset by groups
+
+.font130[
+
+* We can compute summaries of the dataset, performed by a desired variable.
+
+* Basic syntax:
+
+```
+new_dat <- dat %>%
+  group_by(var_to_group) %>%
+  summarise(my_summary = do_smt_func(vars),
+            ...)
+```
+
+Let's compute the mean and standard deviation of the `gdpw2`, by expropriation risk:
+
+```{r}
+PErisk_new <- PErisk %>% group_by(prsexp2) %>%
+  mutate(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
+head(PErisk_new, 3)
+```
+
+**Your turn**: Compute the mean and standard deviation of the tips, grouped by the smoker and non-smoker.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
+
+---
+
+class: inverse, center, middle
+
+# Have a great weekend!
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
