@@ -144,14 +144,6 @@ class: inverse, center, middle
 PErisk_num <- select(PErisk, barb2, gdpw2)
 head(PErisk_num, 2)
 ```
-
-* The syntax to use the `select` is the following:
-
-```
-dat_final <- select(dat_initial, var1, var2, var3, ...)
-```
-**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
-
 ]
 
 ---
@@ -160,7 +152,23 @@ dat_final <- select(dat_initial, var1, var2, var3, ...)
 
 .font130[
 
-* We can select slices and by characteristics. For example:
+The syntax to use the `select` is the following:
+
+```
+dat_final <- select(dat_initial, var1, var2, var3, ...)
+```
+**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
+
+]
+
+
+---
+
+# select: variable selection
+
+.font150[
+
+We can select slices and by characteristics. For example:
 
 ```
 aux <- select(PErisk, country, gdpw2)
@@ -181,7 +189,7 @@ aux <- select(PErisk, starts_with("co"))
 
 .font130[
 
-* And the methods we can apply in the select are the following:
+And the methods we can apply in the select are the following:
 
 | Method             | Effect                                          |
 |--------------------|-------------------------------------------------|
@@ -192,7 +200,7 @@ aux <- select(PErisk, starts_with("co"))
 | vk:vn              | All variables between `vn` and `vk`             |
 | -(vk:vn)           | All but `vk` to `vn`                            |
 
-* We can even rename variables using `select`.
+We can even rename variables using `select`.
 ]
 
 ---
@@ -207,17 +215,25 @@ class: inverse, center, middle
 
 # rename: change names variables
 
-.font130[
+.font150[
 
-* We can change the names of the variables using `rename`.
+We can change the names of the variables using `rename`.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat <- rename(dat, 
                   new_name1 = old_name1,
                   ...)
 ```
+
+]
+
+---
+
+# rename: change names variables
+
+.font130[
 
 Let's rename the `PErisk` courts to `indep_judiciary`:
 
@@ -243,15 +259,23 @@ class: inverse, center, middle
 
 # filter: select pieces of the dataset
 
-.font130[
+.font150[
 
-* We can select desired rows of the dataset using the function `filter`.
+We can select desired rows of the dataset using the function `filter`.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat <- filter(dat, condition1, condition2, ...)
 ```
+
+]
+
+---
+
+# filter: select pieces of the dataset
+
+.font130[
 
 Let's filter the `PErisk` to keep all countries without independent judiciary:
 
@@ -264,7 +288,6 @@ head(PErisk_new, 2)
 ]
 
 ---
-
 
 # filter: select pieces of the dataset
 
@@ -301,15 +324,24 @@ class: inverse, center, middle
 
 # arrange: sort the dataset
 
+.font150[
+
+We can sort the dataset by levels, according to the needs of our analysis.
+
+Basic syntax:
+
+```
+new_dat <- arrange(dat, var1, 
+                   desc(var2), 
+                   desc(var3), var4, ...)
+```
+]
+
+---
+
+# arrange: sort the dataset
+
 .font130[
-
-* We can sort the dataset by levels, according to the needs of our analysis.
-
-* Basic syntax:
-
-```
-new_dat <- arrange(dat, var1, desc(var2), desc(var3), var4, ...)
-```
 
 Let's arrange the `PErisk` by the gdpw2, in descending order:
 
@@ -334,11 +366,11 @@ class: inverse, center, middle
 
 # mutate: make transformation in the dataset
 
-.font130[
+.font150[
 
-* We can make transformations in the dataset using the function `mutate`
+We can make transformations in the dataset using the function `mutate`
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat <- mutate(dat, 
@@ -346,12 +378,20 @@ new_dat <- mutate(dat,
                   ...)
 ```
 
+]
+
+---
+
+# mutate: make transformation in the dataset
+
+.font130[
+
 Let's mutate the `PErisk`, to show the gdp in dollars:
 
 ```{r}
 PErisk_new <- mutate(PErisk,
                      gdppc = exp(gdpw2))
-head(PErisk_new, 3)
+head(PErisk_new, 2)
 ```
 
 **Your turn**: Let's find the percentage of the tips based on the total bill. Divide the tip by the total bill, and multiply by 100. Sort the data by this variable.
@@ -370,11 +410,11 @@ class: inverse, center, middle
 
 # summarise: summaries of the dataset
 
-.font130[
+.font150[
 
-* We can compute summaries of the dataset, performed by a desired variable.
+We can compute summaries of the dataset, performed by a desired variable.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat <- summarise(dat, 
@@ -382,13 +422,21 @@ new_dat <- summarise(dat,
                      ...)
 ```
 
+]
+
+---
+
+# summarise: summaries of the dataset
+
+.font130[
+
 Let's compute the mean and standard deviation of the `gdpw2`, and of `barb2`.:
 
 ```{r}
-PErisk_new <- mutate(PErisk,
-                     mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
-                     mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
-head(PErisk_new, 3)
+PErisk_new <- summarise(PErisk,
+                        mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
+                        mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
+head(PErisk_new, 2)
 ```
 
 **Your turn**: Compute the mean and standard deviation of the tips.
@@ -408,11 +456,11 @@ class: inverse, center, middle
 
 # summarise and group_by: summaries of the dataset by groups
 
-.font130[
+.font150[
 
-* We can compute summaries of the dataset, performed by a desired variable.
+We can compute summaries of the dataset, performed by a desired variable.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat <- dat %>%
@@ -420,15 +468,27 @@ new_dat <- dat %>%
   summarise(my_summary = do_smt_func(vars),
             ...)
 ```
+]
 
+---
+
+# summarise and group_by: summaries of the dataset by groups
+
+.font130[
 Let's compute the mean and standard deviation of the `gdpw2`, by expropriation risk:
 
 ```{r}
 PErisk_new <- PErisk %>% group_by(prsexp2) %>%
-  mutate(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
-head(PErisk_new, 3)
+  summarise(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
+head(PErisk_new, 2)
 ```
+]
 
+---
+
+# summarise and group_by: summaries of the dataset by groups
+
+.font150[
 **Your turn**: Compute the mean and standard deviation of the tips, grouped by the smoker and non-smoker.
 
 ]

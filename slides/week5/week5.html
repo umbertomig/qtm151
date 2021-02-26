@@ -186,14 +186,6 @@ head(PErisk_num, 2)
 ## 1 -0.7207754  9.69017
 ## 2 -6.9077550 10.30484
 ```
-
-* The syntax to use the `select` is the following:
-
-```
-dat_final &lt;- select(dat_initial, var1, var2, var3, ...)
-```
-**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
-
 ]
 
 ---
@@ -202,7 +194,23 @@ dat_final &lt;- select(dat_initial, var1, var2, var3, ...)
 
 .font130[
 
-* We can select slices and by characteristics. For example:
+The syntax to use the `select` is the following:
+
+```
+dat_final &lt;- select(dat_initial, var1, var2, var3, ...)
+```
+**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
+
+]
+
+
+---
+
+# select: variable selection
+
+.font150[
+
+We can select slices and by characteristics. For example:
 
 ```
 aux &lt;- select(PErisk, country, gdpw2)
@@ -223,7 +231,7 @@ aux &lt;- select(PErisk, starts_with("co"))
 
 .font130[
 
-* And the methods we can apply in the select are the following:
+And the methods we can apply in the select are the following:
 
 | Method             | Effect                                          |
 |--------------------|-------------------------------------------------|
@@ -234,8 +242,7 @@ aux &lt;- select(PErisk, starts_with("co"))
 | vk:vn              | All variables between `vn` and `vk`             |
 | -(vk:vn)           | All but `vk` to `vn`                            |
 
-
-* We can even rename variables using `select`.
+We can even rename variables using `select`.
 ]
 
 ---
@@ -250,25 +257,31 @@ class: inverse, center, middle
 
 # rename: change names variables
 
-.font130[
+.font150[
 
-* We can change the names of the variables using `rename`.
+We can change the names of the variables using `rename`.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat &lt;- rename(dat, 
                   new_name1 = old_name1,
-                  new_name2 = old_name2,
                   ...)
 ```
+
+]
+
+---
+
+# rename: change names variables
+
+.font130[
 
 Let's rename the `PErisk` courts to `indep_judiciary`:
 
 
 ```r
-PErisk_new &lt;- rename(PErisk, 
-                     indep_judiciary = courts)
+PErisk_new &lt;- rename(PErisk, indep_judiciary = courts)
 head(PErisk_new, 2)
 ```
 
@@ -278,9 +291,9 @@ head(PErisk_new, 2)
 ## 2 Australia               1 -6.9077550       5        4 10.30484
 ```
 
-]
-
 **Your turn**: rename the `totbill` to `totalbill` in the dataset `tips`.
+
+]
 
 ---
 
@@ -295,15 +308,23 @@ class: inverse, center, middle
 
 # filter: select pieces of the dataset
 
-.font130[
+.font150[
 
-* We can select desired rows of the dataset using the function `filter`.
+We can select desired rows of the dataset using the function `filter`.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat &lt;- filter(dat, condition1, condition2, ...)
 ```
+
+]
+
+---
+
+# filter: select pieces of the dataset
+
+.font130[
 
 Let's filter the `PErisk` to keep all countries without independent judiciary:
 
@@ -323,7 +344,6 @@ head(PErisk_new, 2)
 ]
 
 ---
-
 
 # filter: select pieces of the dataset
 
@@ -361,32 +381,37 @@ class: inverse, center, middle
 
 # arrange: sort the dataset
 
+.font150[
+
+We can sort the dataset by levels, according to the needs of our analysis.
+
+Basic syntax:
+
+```
+new_dat &lt;- arrange(dat, var1, 
+                   desc(var2), 
+                   desc(var3), var4, ...)
+```
+]
+
+---
+
+# arrange: sort the dataset
+
 .font130[
-
-* We can sort the dataset by levels, according to the needs of our analysis.
-
-* Basic syntax:
-
-```
-new_dat &lt;- arrange(dat, var1, desc(var2), desc(var3), var4, ...)
-```
 
 Let's arrange the `PErisk` by the gdpw2, in descending order:
 
 
 ```r
-PErisk_new &lt;- arrange(PErisk,
-                      desc(gdpw2))
-head(PErisk_new, 5)
+PErisk_new &lt;- arrange(PErisk, desc(gdpw2))
+head(PErisk_new, 2)
 ```
 
 ```
 ##       country courts     barb2 prsexp2 prscorr2    gdpw2
 ## 1      Canada      1 -6.907755       5        5 10.41018
 ## 2 Switzerland      1 -6.907755       5        5 10.34110
-## 3   Australia      1 -6.907755       5        4 10.30484
-## 4      Norway      1 -6.907755       5        5 10.29833
-## 5       Italy      1 -6.907755       4        3 10.26078
 ```
 
 **Your turn**: Arrange the `tips` by the size of the tip, in ascending order. See the head and the tail of the arranged data.
@@ -405,11 +430,11 @@ class: inverse, center, middle
 
 # mutate: make transformation in the dataset
 
-.font130[
+.font150[
 
-* We can make transformations in the dataset using the function `mutate`
+We can make transformations in the dataset using the function `mutate`
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat &lt;- mutate(dat, 
@@ -417,20 +442,27 @@ new_dat &lt;- mutate(dat,
                   ...)
 ```
 
+]
+
+---
+
+# mutate: make transformation in the dataset
+
+.font130[
+
 Let's mutate the `PErisk`, to show the gdp in dollars:
 
 
 ```r
 PErisk_new &lt;- mutate(PErisk,
                      gdppc = exp(gdpw2))
-head(PErisk_new, 3)
+head(PErisk_new, 2)
 ```
 
 ```
 ##     country courts      barb2 prsexp2 prscorr2    gdpw2    gdppc
 ## 1 Argentina      0 -0.7207754       1        3  9.69017 16157.99
 ## 2 Australia      1 -6.9077550       5        4 10.30484 29876.87
-## 3   Austria      1 -4.9103370       5        4 10.10094 24365.90
 ```
 
 **Your turn**: Let's find the percentage of the tips based on the total bill. Divide the tip by the total bill, and multiply by 100. Sort the data by this variable.
@@ -449,11 +481,11 @@ class: inverse, center, middle
 
 # summarise: summaries of the dataset
 
-.font130[
+.font150[
 
-* We can compute summaries of the dataset, performed by a desired variable.
+We can compute summaries of the dataset, performed by a desired variable.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat &lt;- summarise(dat, 
@@ -461,25 +493,27 @@ new_dat &lt;- summarise(dat,
                      ...)
 ```
 
+]
+
+---
+
+# summarise: summaries of the dataset
+
+.font130[
+
 Let's compute the mean and standard deviation of the `gdpw2`, and of `barb2`.:
 
 
 ```r
-PErisk_new &lt;- mutate(PErisk,
-                     mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
-                     mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
-head(PErisk_new, 3)
+PErisk_new &lt;- summarise(PErisk,
+                        mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
+                        mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
+head(PErisk_new, 2)
 ```
 
 ```
-##     country courts      barb2 prsexp2 prscorr2    gdpw2 mean_gdp   std_gdp
-## 1 Argentina      0 -0.7207754       1        3  9.69017 9.041875 0.9702639
-## 2 Australia      1 -6.9077550       5        4 10.30484 9.041875 0.9702639
-## 3   Austria      1 -4.9103370       5        4 10.10094 9.041875 0.9702639
-##   mean_barb2 std_barb2
-## 1  -2.925557  2.707211
-## 2  -2.925557  2.707211
-## 3  -2.925557  2.707211
+##   mean_gdp   std_gdp mean_barb2 std_barb2
+## 1 9.041875 0.9702639  -2.925557  2.707211
 ```
 
 **Your turn**: Compute the mean and standard deviation of the tips.
@@ -499,11 +533,11 @@ class: inverse, center, middle
 
 # summarise and group_by: summaries of the dataset by groups
 
-.font130[
+.font150[
 
-* We can compute summaries of the dataset, performed by a desired variable.
+We can compute summaries of the dataset, performed by a desired variable.
 
-* Basic syntax:
+Basic syntax:
 
 ```
 new_dat &lt;- dat %&gt;%
@@ -511,26 +545,43 @@ new_dat &lt;- dat %&gt;%
   summarise(my_summary = do_smt_func(vars),
             ...)
 ```
+]
 
+---
+
+# summarise and group_by: summaries of the dataset by groups
+
+.font130[
 Let's compute the mean and standard deviation of the `gdpw2`, by expropriation risk:
 
 
 ```r
 PErisk_new &lt;- PErisk %&gt;% group_by(prsexp2) %&gt;%
-  mutate(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
-head(PErisk_new, 3)
+  summarise(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
 ```
 
 ```
-## # A tibble: 3 x 8
-## # Groups:   prsexp2 [2]
-##   country   courts  barb2 prsexp2 prscorr2 gdpw2 mean_gdp std_gdp
-##   &lt;chr&gt;      &lt;int&gt;  &lt;dbl&gt;   &lt;int&gt;    &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
-## 1 Argentina      0 -0.721       1        3  9.69     8.48   1.04 
-## 2 Australia      1 -6.91        5        4 10.3     10.1    0.171
-## 3 Austria        1 -4.91        5        4 10.1     10.1    0.171
+## `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
+```r
+head(PErisk_new, 2)
+```
+
+```
+## # A tibble: 2 x 3
+##   prsexp2 mean_gdp std_gdp
+##     &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1       0     8.98   0.555
+## 2       1     8.48   1.04
+```
+]
+
+---
+
+# summarise and group_by: summaries of the dataset by groups
+
+.font150[
 **Your turn**: Compute the mean and standard deviation of the tips, grouped by the smoker and non-smoker.
 
 ]
