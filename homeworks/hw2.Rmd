@@ -1,0 +1,31 @@
+---
+title: "Homework 2 - plotly"
+author: "Your number here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(plotly)
+library(gapminder)
+```
+
+**Q1**: (3 points) For the data `gapminder`, make a scatterplot between `pop` and `lifeExp` at the year of 2007 , set color to the continent, mark the country names to the max and min of lifeExp.
+
+```{r}
+# Your code here
+```
+
+
+**Q2**: (3 points) For the data `gapminder`, make a `plotly` graph between `gapPercap` and `lifeExp`, set color to the variable continent, size to the population, add linear smooth lines to different continent, show them at each year by animation (set frame to the `year`).
+
+```{r}
+# Your code here
+```
+
+**Q3**: (4 points) For the data `txhousing`, make a line graph to show monthly median house price among all Texan cities, choose your two favorite cities, and adding two lines to highlight these two cities. Moreover, for the same graph, add another two lines to show the maximum and minimum of monthly median house price among all Texan cities by date.
+
+```{r}
+# Your code here
+```
