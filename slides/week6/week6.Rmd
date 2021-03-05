@@ -1,6 +1,6 @@
 ---
 title: "QTM 151"
-subtitle: "Week 6 -- dplyr (joining datasets) <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+subtitle: "Week 6 -- dplyr (join datasets) <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
 date: "Mar 5"
 output: 
@@ -11,6 +11,7 @@ output:
       beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
       highlightStyle: github
       ratio: 4:3
+      self-contained: false
       highlightLines: true
       countIncrementalSlides: false
       slideNumberFormat: |
