@@ -1,0 +1,465 @@
+---
+title: "QTM 151"
+subtitle: "Week 7 -- tidyr <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+author: "Umberto Mignozzetti"
+date: "Mar 12"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
+    nature: 
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
+      highlightStyle: github
+      ratio: 4:3
+      self-contained: false
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+r <- getOption("repos")
+r["CRAN"] <- "https://cloud.r-project.org/"
+options(repos = r)
+```
+
+<style>
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+</style>
+
+# Recap
+
+.font130[
+
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly`: transform ggplot objects into nice plotly viz.
+ + `plot_ly`: create nice plotly graphs.
+ + `dplyr` methods: data wrangling
+ + `dplyr *_join` methods: joining data
+
+Do you have any questions about any of these contents?
+
+**No quiz this week**
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+```{r}
+# Loading tidyverse
+library(tidyverse)
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+# population table
+table1<-tibble(
+  `country`=c("Afghanistan","Brazil","China"),
+  `1999`=c(19987071, 172006362, 1272915272),
+  `2000`=c(20595360, 174504898, 1280428583)
+)
+table1
+
+# case table
+table2<-tibble(
+  `country` = c("Afghanistan","Brazil","China"),
+  `1999` = c(745, 37737, 212258),
+  `2000` = c(2666, 80488, 213766)
+)
+table2
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+table3<- tibble(
+  `country` = c("Afghanistan", "Afghanistan", "Afghanistan", "Afghanistan", "Brazil", "Brazil", "Brazil", "Brazil","China", "China","China", "China"),
+   `year` = c(1999,1999,2000,2000,1999,1999,2000,2000,1999,1999,2000,2000),
+   `type` = c("case", "population","case", "population","case", "population","case", "population","case", "population","case", "population"),
+   `count` = c(745, 19987071, 2666, 20595360, 37737, 172006362, 80488, 174504898, 212258, 1272915272, 213766, 1280428583)
+)
+table3
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+table4<-tibble(
+    `country` = c("Afghanistan", "Afghanistan", "Brazil", "Brazil","China", "China"),
+     `year` = c(1999,2000,1999,2000,1999,2000),
+    `rate`= c("745/19987071", "2666/20595360", "37737/172006362", "80488/174504898", "212258/1272915272", "213766/1280428583")
+)
+table4
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+# population table
+tbl1<-tibble(
+  `county`=c("DeKalb","Fulton","Cobb"),
+  `2010`=c(691961, 920581, 690688),
+  `2011`=c(693961, 921581, 691688)
+)
+tbl1
+
+# veterans table
+tbl2<-tibble(
+  `county` = c("DeKalb","Fulton","Cobb"),
+  `2010` = c(36189, 42448, 41345),
+  `2011` = c(36389, 42648, 41545)
+)
+tbl2
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+tbl3<- tibble(
+  `country` = c("DeKalb", "DeKalb", "DeKalb", "DeKalb", "Fulton", "Fulton", "Fulton", "Fulton","Cobb", "Cobb","Cobb", "Cobb"),
+   `year` = c(2010,2010,2011,2011,2010,2010,2011,2011,2010,2010,2011,2011),
+   `type` = c("veterans", "population","veterans", "population","veterans", "population","veterans", "population","veterans", "population","veterans", "population"),
+   `count` = c(36189, 691961, 36389, 693961, 42448, 920581, 42648, 921581, 41345, 690688, 41545, 691688)
+)
+tbl3
+```
+]
+
+---
+
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+tbl4<- tibble(
+  `country` = c("DeKalb", "DeKalb", "Fulton", "Fulton", "Cobb", "Cobb"),
+   `year` = c(2010,2011,2010,2011,2010,2011),
+   `prop` = c("36189/691961", "36389/693961", "42448/920581", "42648/921581", "41345/690688", "41545/691688")
+)
+tbl4
+
+stocks1 <-tibble(
+  year = rep(c(2015,2016), each=4),
+  qtr = rep(c(1,2,3,4), 2),
+  return = c(1.88, 0.59, 0.35, NA, NA, 0.92,0.17, 2.66)
+) %>% na.omit()
+```
+]
+
+---
+
+class: inverse, center, middle
+
+# tidyr
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# tidyr
+
+.font130[
+The *tidyr* package helps tidy up messy datasets. There are three interrelated rules which make a dataset tidy:
+
+1. Each variable must have its own column
+
+2. Each observation must have its own row
+
+3. Each value must have its own cell
+
+There are a few key functions in the *tidyr* package, *gather()*, *spread()*, *separate()*, *unite()*, *complete()*, *fill()*.
+]
+
+---
+
+class: inverse, center, middle
+
+# gather
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# gather
+
+.font130[
+
+To tidy  a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
+
+Syntax:
+```
+gather(dataset, set_of_columns, 
+       key="name of variable whose values form the column names", 
+       value="name of variable whose values are spread over the cells")
+```
+]
+
+---
+
+# gather
+
+.font130[
+Example:
+
+```{r}
+gather(table1, `1999`,`2000`, key="year", value="population")
+```
+
+]
+
+---
+
+# gather
+
+.font130[
+Example:
+
+```{r}
+gather(table2, "1999":"2000", key=year, value = cases)
+```
+
+**Your Turn**: Do the same with the `tbl1` and `tbl2` datasets. Save the results and join the datasets.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# spread
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# spread
+
+.font130[
+
+*spread()* is the opposite of *gather()*.
+
+*gather()* makes wide tables narrower and longer, *spread()* makes long tables shorter and wider.
+
+Syntax:
+```
+spread(dataset, 
+       key="the column that contains variable name", 
+       value="the column that contains values forms multiple variables")
+```
+]
+
+---
+
+# spread
+
+.font130[
+Example:
+
+```{r}
+spread(table3, key= "type", value= "count")
+```
+
+**Your Turn**: Check out `tbl3`. Then, spread it by `type`.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# separate and unite
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# separate and unite
+
+.font130[
+
+*separate()* pulls apart one column into multiple columns, *unite()* is the inverse of *separate()*.
+
+Check `table4`. Note that the rate variable has two variables inside it: cases and population. To separate them:
+
+Syntax for *separate()*:
+```
+separate(table, variable_separate, into=c('v1','v2'), sep="/")
+```
+]
+
+---
+
+# separate and unite
+
+.font130[
+Example:
+
+```{r}
+table5 <- separate(table4, rate, into=c('case','population'), sep="/")
+table5
+```
+
+**Your Turn**: Do the same separate for `tbl4`.
+
+]
+
+---
+
+# separate and unite
+
+.font130[
+We can also separate by position:
+
+```{r}
+separate(table3, year, into = c("century", "year"), sep=2)
+```
+
+**Your Turn**: Do the same to separate `tbl3` year by position.
+
+]
+
+---
+
+# separate and unite
+
+.font130[
+
+Syntax for *unite()*:
+```
+unite(table, name_col, col1, col2, ..., sep="/")
+```
+]
+
+---
+
+# separate and unite
+
+.font130[
+Example:
+
+```{r}
+unite(table5, col = rate, case, population, sep="/")
+```
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# complete
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# complete
+
+.font130[
+
+*complete()* is useful to fill up the columns with missing data, based on a given pattern.
+
+Suppose we have the following dataset:
+
+```{r}
+df <- tibble(
+  group = c(1:2, 1), item_id = c(1:2, 2),
+  item_name = c("a", "b", "b"),
+  value1 = 1:3, value2 = 4:6
+)
+df
+```
+]
+
+---
+
+# complete
+
+.font130[
+We can complete by group, item_id and item_name:
+
+```{r}
+df %>% complete(group, nesting(item_id, item_name))
+```
+
+**Your Turn**: Do the same complete for `stocks1`. What happened?
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
+
+---
+
+class: inverse, center, middle
+
+# Have a great weekend!
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>

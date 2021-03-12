@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>QTM 151</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Umberto Mignozzetti" />
+    <script src="week7_files/header-attrs/header-attrs.js"></script>
+    <link href="week7_files/remark-css/default.css" rel="stylesheet" />
+    <link href="week7_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="week7_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# QTM 151
+## Week 7 – tidyr
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#f2a900' size=1px width=800px>
+</html>
+### Umberto Mignozzetti
+### Mar 12
+
+---
+
+
+
+
+&lt;style&gt;
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+&lt;/style&gt;
+
+# Recap
+
+.font130[
+
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly`: transform ggplot objects into nice plotly viz.
+ + `plot_ly`: create nice plotly graphs.
+ + `dplyr` methods: data wrangling
+ + `dplyr *_join` methods: joining data
+
+Do you have any questions about any of these contents?
+
+**No quiz this week**
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+
+```r
+# Loading tidyverse
+library(tidyverse)
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+
+```r
+# population table
+table1&lt;-tibble(
+  `country`=c("Afghanistan","Brazil","China"),
+  `1999`=c(19987071, 172006362, 1272915272),
+  `2000`=c(20595360, 174504898, 1280428583)
+)
+table1
+```
+
+```
+## # A tibble: 3 x 3
+##   country         `1999`     `2000`
+##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Afghanistan   19987071   20595360
+## 2 Brazil       172006362  174504898
+## 3 China       1272915272 1280428583
+```
+
+```r
+# case table
+table2&lt;-tibble(
+  `country` = c("Afghanistan","Brazil","China"),
+  `1999` = c(745, 37737, 212258),
+  `2000` = c(2666, 80488, 213766)
+)
+table2
+```
+
+```
+## # A tibble: 3 x 3
+##   country     `1999` `2000`
+##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Afghanistan    745   2666
+## 2 Brazil       37737  80488
+## 3 China       212258 213766
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+
+```r
+table3&lt;- tibble(
+  `country` = c("Afghanistan", "Afghanistan", "Afghanistan", "Afghanistan", "Brazil", "Brazil", "Brazil", "Brazil","China", "China","China", "China"),
+   `year` = c(1999,1999,2000,2000,1999,1999,2000,2000,1999,1999,2000,2000),
+   `type` = c("case", "population","case", "population","case", "population","case", "population","case", "population","case", "population"),
+   `count` = c(745, 19987071, 2666, 20595360, 37737, 172006362, 80488, 174504898, 212258, 1272915272, 213766, 1280428583)
+)
+table3
+```
+
+```
+## # A tibble: 12 x 4
+##    country      year type            count
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+##  1 Afghanistan  1999 case              745
+##  2 Afghanistan  1999 population   19987071
+##  3 Afghanistan  2000 case             2666
+##  4 Afghanistan  2000 population   20595360
+##  5 Brazil       1999 case            37737
+##  6 Brazil       1999 population  172006362
+##  7 Brazil       2000 case            80488
+##  8 Brazil       2000 population  174504898
+##  9 China        1999 case           212258
+## 10 China        1999 population 1272915272
+## 11 China        2000 case           213766
+## 12 China        2000 population 1280428583
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+
+```r
+table4&lt;-tibble(
+    `country` = c("Afghanistan", "Afghanistan", "Brazil", "Brazil","China", "China"),
+     `year` = c(1999,2000,1999,2000,1999,2000),
+    `rate`= c("745/19987071", "2666/20595360", "37737/172006362", "80488/174504898", "212258/1272915272", "213766/1280428583")
+)
+table4
+```
+
+```
+## # A tibble: 6 x 3
+##   country      year rate             
+##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+## 1 Afghanistan  1999 745/19987071     
+## 2 Afghanistan  2000 2666/20595360    
+## 3 Brazil       1999 37737/172006362  
+## 4 Brazil       2000 80488/174504898  
+## 5 China        1999 212258/1272915272
+## 6 China        2000 213766/1280428583
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+
+```r
+# population table
+tbl1&lt;-tibble(
+  `county`=c("DeKalb","Fulton","Cobb"),
+  `2010`=c(691961, 920581, 690688),
+  `2011`=c(693961, 921581, 691688)
+)
+tbl1
+```
+
+```
+## # A tibble: 3 x 3
+##   county `2010` `2011`
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 DeKalb 691961 693961
+## 2 Fulton 920581 921581
+## 3 Cobb   690688 691688
+```
+
+```r
+# veterans table
+tbl2&lt;-tibble(
+  `county` = c("DeKalb","Fulton","Cobb"),
+  `2010` = c(36189, 42448, 41345),
+  `2011` = c(36389, 42648, 41545)
+)
+tbl2
+```
+
+```
+## # A tibble: 3 x 3
+##   county `2010` `2011`
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 DeKalb  36189  36389
+## 2 Fulton  42448  42648
+## 3 Cobb    41345  41545
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+
+```r
+tbl3&lt;- tibble(
+  `country` = c("DeKalb", "DeKalb", "DeKalb", "DeKalb", "Fulton", "Fulton", "Fulton", "Fulton","Cobb", "Cobb","Cobb", "Cobb"),
+   `year` = c(2010,2010,2011,2011,2010,2010,2011,2011,2010,2010,2011,2011),
+   `type` = c("veterans", "population","veterans", "population","veterans", "population","veterans", "population","veterans", "population","veterans", "population"),
+   `count` = c(36189, 691961, 36389, 693961, 42448, 920581, 42648, 921581, 41345, 690688, 41545, 691688)
+)
+tbl3
+```
+
+```
+## # A tibble: 12 x 4
+##    country  year type        count
+##    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1 DeKalb   2010 veterans    36189
+##  2 DeKalb   2010 population 691961
+##  3 DeKalb   2011 veterans    36389
+##  4 DeKalb   2011 population 693961
+##  5 Fulton   2010 veterans    42448
+##  6 Fulton   2010 population 920581
+##  7 Fulton   2011 veterans    42648
+##  8 Fulton   2011 population 921581
+##  9 Cobb     2010 veterans    41345
+## 10 Cobb     2010 population 690688
+## 11 Cobb     2011 veterans    41545
+## 12 Cobb     2011 population 691688
+```
+]
+
+---
+
+
+# Loading data
+
+.font130[
+
+```r
+tbl4&lt;- tibble(
+  `country` = c("DeKalb", "DeKalb", "Fulton", "Fulton", "Cobb", "Cobb"),
+   `year` = c(2010,2011,2010,2011,2010,2011),
+   `prop` = c("36189/691961", "36389/693961", "42448/920581", "42648/921581", "41345/690688", "41545/691688")
+)
+tbl4
+```
+
+```
+## # A tibble: 6 x 3
+##   country  year prop        
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       
+## 1 DeKalb   2010 36189/691961
+## 2 DeKalb   2011 36389/693961
+## 3 Fulton   2010 42448/920581
+## 4 Fulton   2011 42648/921581
+## 5 Cobb     2010 41345/690688
+## 6 Cobb     2011 41545/691688
+```
+
+```r
+stocks1 &lt;-tibble(
+  year = rep(c(2015,2016), each=4),
+  qtr = rep(c(1,2,3,4), 2),
+  return = c(1.88, 0.59, 0.35, NA, NA, 0.92,0.17, 2.66)
+) %&gt;% na.omit()
+```
+]
+
+---
+
+class: inverse, center, middle
+
+# tidyr
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# tidyr
+
+.font130[
+The *tidyr* package helps tidy up messy datasets. There are three interrelated rules which make a dataset tidy:
+
+1. Each variable must have its own column
+
+2. Each observation must have its own row
+
+3. Each value must have its own cell
+
+There are a few key functions in the *tidyr* package, *gather()*, *spread()*, *separate()*, *unite()*, *complete()*, *fill()*.
+]
+
+---
+
+class: inverse, center, middle
+
+# gather
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# gather
+
+.font130[
+
+To tidy  a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
+
+Syntax:
+```
+gather(dataset, set_of_columns, 
+       key="name of variable whose values form the column names", 
+       value="name of variable whose values are spread over the cells")
+```
+]
+
+---
+
+# gather
+
+.font130[
+Example:
+
+
+```r
+gather(table1, `1999`,`2000`, key="year", value="population")
+```
+
+```
+## # A tibble: 6 x 3
+##   country     year  population
+##   &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
+## 1 Afghanistan 1999    19987071
+## 2 Brazil      1999   172006362
+## 3 China       1999  1272915272
+## 4 Afghanistan 2000    20595360
+## 5 Brazil      2000   174504898
+## 6 China       2000  1280428583
+```
+
+]
+
+---
+
+# gather
+
+.font130[
+Example:
+
+
+```r
+gather(table2, "1999":"2000", key=year, value = cases)
+```
+
+```
+## # A tibble: 6 x 3
+##   country     year   cases
+##   &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;
+## 1 Afghanistan 1999     745
+## 2 Brazil      1999   37737
+## 3 China       1999  212258
+## 4 Afghanistan 2000    2666
+## 5 Brazil      2000   80488
+## 6 China       2000  213766
+```
+
+**Your Turn**: Do the same with the `tbl1` and `tbl2` datasets. Save the results and join the datasets.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# spread
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# spread
+
+.font130[
+
+*spread()* is the opposite of *gather()*.
+
+*gather()* makes wide tables narrower and longer, *spread()* makes long tables shorter and wider.
+
+Syntax:
+```
+spread(dataset, 
+       key="the column that contains variable name", 
+       value="the column that contains values forms multiple variables")
+```
+]
+
+---
+
+# spread
+
+.font130[
+Example:
+
+
+```r
+spread(table3, key= "type", value= "count")
+```
+
+```
+## # A tibble: 6 x 4
+##   country      year   case population
+##   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Afghanistan  1999    745   19987071
+## 2 Afghanistan  2000   2666   20595360
+## 3 Brazil       1999  37737  172006362
+## 4 Brazil       2000  80488  174504898
+## 5 China        1999 212258 1272915272
+## 6 China        2000 213766 1280428583
+```
+
+**Your Turn**: Check out `tbl3`. Then, spread it by `type`.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# separate and unite
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# separate and unite
+
+.font130[
+
+*separate()* pulls apart one column into multiple columns, *unite()* is the inverse of *separate()*.
+
+Check `table4`. Note that the rate variable has two variables inside it: cases and population. To separate them:
+
+Syntax for *separate()*:
+```
+separate(table, variable_separate, into=c('v1','v2'), sep="/")
+```
+]
+
+---
+
+# separate and unite
+
+.font130[
+Example:
+
+
+```r
+table5 &lt;- separate(table4, rate, into=c('case','population'), sep="/")
+table5
+```
+
+```
+## # A tibble: 6 x 4
+##   country      year case   population
+##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
+## 1 Afghanistan  1999 745    19987071  
+## 2 Afghanistan  2000 2666   20595360  
+## 3 Brazil       1999 37737  172006362 
+## 4 Brazil       2000 80488  174504898 
+## 5 China        1999 212258 1272915272
+## 6 China        2000 213766 1280428583
+```
+
+**Your Turn**: Do the same separate for `tbl4`.
+
+]
+
+---
+
+# separate and unite
+
+.font130[
+We can also separate by position:
+
+
+```r
+separate(table3, year, into = c("century", "year"), sep=2)
+```
+
+```
+## # A tibble: 12 x 5
+##    country     century year  type            count
+##    &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;
+##  1 Afghanistan 19      99    case              745
+##  2 Afghanistan 19      99    population   19987071
+##  3 Afghanistan 20      00    case             2666
+##  4 Afghanistan 20      00    population   20595360
+##  5 Brazil      19      99    case            37737
+##  6 Brazil      19      99    population  172006362
+##  7 Brazil      20      00    case            80488
+##  8 Brazil      20      00    population  174504898
+##  9 China       19      99    case           212258
+## 10 China       19      99    population 1272915272
+## 11 China       20      00    case           213766
+## 12 China       20      00    population 1280428583
+```
+
+**Your Turn**: Do the same to separate `tbl3` year by position.
+
+]
+
+---
+
+# separate and unite
+
+.font130[
+
+Syntax for *unite()*:
+```
+unite(table, name_col, col1, col2, ..., sep="/")
+```
+]
+
+---
+
+# separate and unite
+
+.font130[
+Example:
+
+
+```r
+unite(table5, col = rate, case, population, sep="/")
+```
+
+```
+## # A tibble: 6 x 3
+##   country      year rate             
+##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+## 1 Afghanistan  1999 745/19987071     
+## 2 Afghanistan  2000 2666/20595360    
+## 3 Brazil       1999 37737/172006362  
+## 4 Brazil       2000 80488/174504898  
+## 5 China        1999 212258/1272915272
+## 6 China        2000 213766/1280428583
+```
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# complete
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# complete
+
+.font130[
+
+*complete()* is useful to fill up the columns with missing data, based on a given pattern.
+
+Suppose we have the following dataset:
+
+
+```r
+df &lt;- tibble(
+  group = c(1:2, 1), item_id = c(1:2, 2),
+  item_name = c("a", "b", "b"),
+  value1 = 1:3, value2 = 4:6
+)
+df
+```
+
+```
+## # A tibble: 3 x 5
+##   group item_id item_name value1 value2
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;  &lt;int&gt;
+## 1     1       1 a              1      4
+## 2     2       2 b              2      5
+## 3     1       2 b              3      6
+```
+]
+
+---
+
+# complete
+
+.font130[
+We can complete by group, item_id and item_name:
+
+
+```r
+df %&gt;% complete(group, nesting(item_id, item_name))
+```
+
+```
+## # A tibble: 4 x 5
+##   group item_id item_name value1 value2
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;  &lt;int&gt;
+## 1     1       1 a              1      4
+## 2     1       2 b              3      6
+## 3     2       1 a             NA     NA
+## 4     2       2 b              2      5
+```
+
+**Your Turn**: Do the same complete for `stocks1`. What happened?
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+
+---
+
+class: inverse, center, middle
+
+# Have a great weekend!
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "4:3",
+"self-contained": false,
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
