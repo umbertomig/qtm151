@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>QTM 151</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Umberto Mignozzetti" />
+    <script src="week8_files/header-attrs/header-attrs.js"></script>
+    <link href="week8_files/remark-css/default.css" rel="stylesheet" />
+    <link href="week8_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="week8_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# QTM 151
+## Week 8 – Final Project Lab
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#EB811B' size=1px width=800px>
+</html>
+### Umberto Mignozzetti
+### March 19
+
+---
+
+
+
+
+&lt;style&gt;
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #EB811B;
+}
+
+.orange {
+  color: #EB811B;
+}
+&lt;/style&gt;
+
+# Final Project
+
+.font150[
+
+* Today, we will talk about your final project.
+
+* I will create random groups of five students in Canvas.
+
+* And I have four types of projects that each of your groups can implement.
+
+* I'll pitch each project, and at the end you have to select a project for your group.
+]
+
+---
+class: inverse, center, middle
+
+# Option 1 - National Health and Nutrition Examination Survey
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# NHANES
+
+.font130[
+The [National Health and Nutrition Examination Survey (NHANES)](https://www.cdc.gov/nchs/nhanes/index.htm) is a program designed to assess the health and nutritional status of adults and children in the US.
+
+The survey examines a nationally representative sample of about 5,000 persons each year. It combines interviews and physical examinations. 
+
+The NHANES program began in the early 1960s and has been conducted as a series of surveys focusing on different population groups or health topics.
+
+All questionnaires, datasets, and related documentation are publicly accessible at: https://wwwn.cdc.gov/nchs/nhanes/Default.aspx
+]
+
+---
+
+# NHANES
+
+.font130[
+For your final project, as a first option, please use NHANES 2017-2018 data wave.
+* The only reason for not doing this is if you want to analyze the data over time.
+
+If you are interested in analyzing trends over the years, my second option suggestion, you can also look into other data collected in previous years. 
+  + Note that each wave is cross-sectional: from year to year, it was NOT repeated measurements from the same individuals.
+
+]
+
+---
+
+# NHANES
+
+.font130[
+
+* Choose 2-3 data files from the available list and merge them according to your analytical goals.
+
+![NHANES](./nhanes.png)
+ 
+* The data files are in SAS format (XPT), which can be imported into R using the following commands:
+
+```
+  library (Hmisc)
+  library (SASxport)
+  a &lt;- read.xport ("file_name.xpt")
+```
+]
+
+---
+class: inverse, center, middle
+
+# Option 2 -- Expedia
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Expedia
+
+.font150[
+This dataset is provided by Expedia.com, a travel website, which is used to book airline tickets, hotels, car rentals, and vacation packages. 
+
+The dataset file and video will be on Canvas. 
+
+Hint: this is a large dataset, please start small (one random sample of the dataset).
+]
+
+---
+
+class: inverse, center, middle
+
+# Option 3 -- COVID
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# COVID
+
+.font150[
+COVID-19 is still disrupting our way of life.
+
+There are several scholars collecting datasets on COVID around the world
+
+Moreover, NYTimes has built great dataviz on the subject, all in R.
+
+My suggestion is for you to explore the packages about the subject.
+]
+
+---
+
+class: inverse, center, middle
+
+# Option 4 -- World Data
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# World Data
+
+.font130[
+The Quality of Government Institute collects data from all over the world, since 1946 (some variables even early!)
+
+They organize a few datasets that merge together scholars' data, plus their own collected variables.
+
+There are several types of datasets:
+  * Time-Series Cross-Section
+  * Cross-Section only data
+  * Surveys with experts
+  * And many others!
+]
+
+---
+
+class: inverse, center, middle
+
+# Rules
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Final Project: Rules
+
+.font150[
+To receive full marks you will have to apply skills you learned from this course to:
+  - import
+  - tidy, transform, wrangle
+  - and visualize the data 
+  
+You also have to prepare 2-3 slides to present the results with your teammates. Five minutes presentations!
+]
+
+---
+
+# Final Project: Rules
+
+.font130[
+Each project will be judge by:
+  - Insight and creativity of the project
+  - Data visualization of the project
+  - Clarity of the presentation
+  
+Important Deadlines:
+  - Mar 26: Submit your one-page project proposal on Canvas (2pts)
+  - Mar 30: I will notify you my decision / talk to you if I feel the project is unrealistic.
+  - Apr 23: Final submission on Canvas (4pts)
+  - Apr 30: Presentation (4pts)
+]
+
+
+---
+class: inverse, center, middle
+
+# Questions?
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+class: inverse, center, middle
+
+# Have a great weekend!
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=720px&gt;&lt;/html&gt; 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "4:3",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

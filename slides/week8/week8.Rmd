@@ -8,7 +8,7 @@ output:
     css: [default, metropolis, metropolis-fonts]
     mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
     nature: 
-      beforeInit: "macros.js"
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
       highlightStyle: github
       ratio: 4:3
       highlightLines: true
@@ -58,7 +58,7 @@ options(repos = r)
 
 * Today, we will talk about your final project.
 
-* I created random groups of five students in Canvas.
+* I will create random groups of five students in Canvas.
 
 * And I have four types of projects that each of your groups can implement.
 
@@ -74,33 +74,34 @@ class: inverse, center, middle
 
 ---
 
-# Option 1 -- NHANES
+# NHANES
 
 .font130[
-* The [National Health and Nutrition Examination Survey (NHANES)](https://www.cdc.gov/nchs/nhanes/index.htm) is a program designed to assess the health and nutritional status of adults and children in the US.
+The [National Health and Nutrition Examination Survey (NHANES)](https://www.cdc.gov/nchs/nhanes/index.htm) is a program designed to assess the health and nutritional status of adults and children in the US.
 
-* The survey examines a nationally representative sample of about 5,000 persons each year. It combines interviews and physical examinations. 
+The survey examines a nationally representative sample of about 5,000 persons each year. It combines interviews and physical examinations. 
 
-* The NHANES program began in the early 1960s and has been conducted as a series of surveys focusing on different population groups or health topics.
+The NHANES program began in the early 1960s and has been conducted as a series of surveys focusing on different population groups or health topics.
 
-* All questionnaires, datasets, and related documentation are publicly accessible at: https://wwwn.cdc.gov/nchs/nhanes/Default.aspx
+All questionnaires, datasets, and related documentation are publicly accessible at: https://wwwn.cdc.gov/nchs/nhanes/Default.aspx
 ]
 
 ---
 
-# Option 1 -- NHANES
+# NHANES
 
 .font130[
-* For your final project, please use NHANES 2017-2018 data wave.
+For your final project, as a first option, please use NHANES 2017-2018 data wave.
+* The only reason for not doing this is if you want to analyze the data over time.
 
-* If you are interested in analyzing trends over the years, you can also look into other data collected in previous years. 
+If you are interested in analyzing trends over the years, my second option suggestion, you can also look into other data collected in previous years. 
   + Note that each wave is cross-sectional: from year to year, it was NOT repeated measurements from the same individuals.
 
 ]
 
 ---
 
-# Option 1 -- NHANES
+# NHANES
 
 .font130[
 
@@ -126,14 +127,14 @@ class: inverse, center, middle
 
 ---
 
-# Option 2 -- Expedia
+# Expedia
 
 .font150[
-* This dataset is provided by Expedia.com, a travel website, which is used to book airline tickets, hotels, car rentals, and vacation packages. 
+This dataset is provided by Expedia.com, a travel website, which is used to book airline tickets, hotels, car rentals, and vacation packages. 
 
-* The dataset file and video will be on Canvas. 
+The dataset file and video will be on Canvas. 
 
-* Hint: this is such a large dataset, please start small (one random sample of the dataset).
+Hint: this is a large dataset, please start small (one random sample of the dataset).
 ]
 
 ---
@@ -146,10 +147,16 @@ class: inverse, center, middle
 
 ---
 
-# Option 3 -- COVID
+# COVID
 
 .font150[
-* COVID-19 XXXX
+COVID-19 is still disrupting our way of life.
+
+There are several scholars collecting datasets on COVID around the world
+
+Moreover, NYTimes has built great dataviz on the subject, all in R.
+
+My suggestion is for you to explore the packages about the subject.
 ]
 
 ---
@@ -162,40 +169,52 @@ class: inverse, center, middle
 
 ---
 
-# Option 4 -- World Data
+# World Data
 
-.font150[
-* The Quality of Government Institute XXXX.
+.font130[
+The Quality of Government Institute collects data from all over the world, since 1946 (some variables even early!)
 
-* They organize a dataset with XXXX.
+They organize a few datasets that merge together scholars' data, plus their own collected variables.
 
-* Also, they organize a dataset on XXXX.
+There are several types of datasets:
+  * Time-Series Cross-Section
+  * Cross-Section only data
+  * Surveys with experts
+  * And many others!
 ]
+
+---
+
+class: inverse, center, middle
+
+# Rules
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
 
 ---
 
 # Final Project: Rules
 
 .font150[
-* To receive full marks you will have to apply skills you learned from this course to:
+To receive full marks you will have to apply skills you learned from this course to:
   - import
   - tidy, transform, wrangle
   - and visualize the data 
   
-* You also have to prepare 2-3 slides to present the results with your teammates. Five minutes presentations!
+You also have to prepare 2-3 slides to present the results with your teammates. Five minutes presentations!
 ]
 
 ---
 
 # Final Project: Rules
 
-.font150[
-* Each project will be judge by:
+.font130[
+Each project will be judge by:
   - Insight and creativity of the project
   - Data visualization of the project
   - Clarity of the presentation
   
-* Important Deadlines:
+Important Deadlines:
   - Mar 26: Submit your one-page project proposal on Canvas (2pts)
   - Mar 30: I will notify you my decision / talk to you if I feel the project is unrealistic.
   - Apr 23: Final submission on Canvas (4pts)
