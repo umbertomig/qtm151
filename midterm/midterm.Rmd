@@ -1,0 +1,104 @@
+---
+title: "Midterm"
+author: "Your name here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Question 1 (1 pt) - Loading Datasets and Packages
+
+In the GitHub page, I placed three datasets:
+
+1. `corona.csv`
+2. `partial1.csv`
+3. `partial2.csv`
+4. `vaccinesUS.csv`
+5. `vaccinesWorld.csv`
+
+Also load the following packages:
+
+1. `tidyverse`
+2. `plotly`
+
+```{r}
+# Your answers here
+```
+
+## Question 2 (1 pt) - qplot
+
+Experts claim that the COVID death rate varies with the number of people with underlying diseases, such as diabetes. In the dataset `corona` you have the variables `cvd_death_rate` and `diabetes_prevalence`. Plot the diabetes prevalence against the covid death rate, to see the relationship. Add a smooth linear trend line. Use the function `qplot`. Would you say that this data corroborates this hypothesis?
+
+```{r}
+# Your answers here
+```
+
+_No relations_
+
+## Question 3 (2 pt) - ggplotly
+
+Using the `corona` dataset, make the previous plot (plot from question 2), but now displaying the values for the observations. Use `ggplotly`, and reuse the previous code.
+
+```{r}
+# Your answers here
+```
+
+## Question 4 (1 pt) - plot_ly
+
+The dataset `vaccinesUS.csv` has the daily vaccinations the US. Make a plot that displays the increase of vaccination each day. Use the function `plot_ly`. (hint: look at the first plot in here: https://plotly.com/r/time-series/)
+
+```{r}
+# Your answers here
+```
+
+## Question 5 (2 pt) - dplyr
+
+For the dataset `corona`, compute the average of the following variables: `cvd_death_rate`, `aged_70_older`, `diabetes_prevalence`, `female_smokers`, `male_smokers` by continent. Arrange by the mean of the covid death rate, in descending order. Use group_by and summarize. Use pipe (`%>%`).
+
+```{r}
+# Your answers here
+```
+
+## Question 6 (1 pt) - dplyr join
+
+Join the datasets `partial1.csv` and `partial2.csv`. You should use `full_join`. Hint: to join the datasets you will need to find the key variable and match it. When done, plot the head of the end dataset.
+
+```{r}
+# Your answers here
+```
+
+## Question 7 (2 pt) - tidyr
+
+The dataset `vaccinesWorld.csv` head is like this, for the variables `location`, `date`, and `total_vaccinations`:
+
+```
+# A tibble: 6 x 3
+  location    date       total_vaccinations
+  <chr>       <date>                  <dbl>
+1 Afghanistan 2021-02-22                  0
+2 Afghanistan 2021-02-23                 NA
+3 Afghanistan 2021-02-24                 NA
+4 Afghanistan 2021-02-25                 NA
+5 Afghanistan 2021-02-26                 NA
+6 Afghanistan 2021-02-27                 NA
+```
+
+Use tidyr to transform it into this:
+
+```
+# A tibble: 182 x 117
+   location            `2020-12-13` `2020-12-14` `2020-12-15`
+   <chr>                      <dbl>        <dbl>        <dbl>
+ 1 Afghanistan                   NA           NA           NA
+ 2 Africa                        NA           NA           NA
+ 3 Albania                       NA           NA           NA
+ 4 Algeria                       NA           NA           NA
+ 5 Andorra                       NA           NA           NA
+```
+
+```{r}
+# Your answers here
+```
