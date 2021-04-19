@@ -1,0 +1,20 @@
+---
+title: "Homework 5"
+author: "Your name here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(babynames)
+```
+
+
+## Question (10pts)
+
+Reshape the layout of the dataset 'babynames'. Calculate the percent of female children by year. Then plot the percent over time.
+
+```{r}
+# Your answer here
+```

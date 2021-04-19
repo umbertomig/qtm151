@@ -1,0 +1,47 @@
+---
+title: "Homework 3 - dplyr"
+author: "Your number here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(babynames)
+library(tidyverse)
+library(nycflights13)
+```
+
+**About the datasets**:
+
+**`babynames`**: Baby names. Full baby name data provided by the SSA. This includes all names with at least 5 uses. The data frame has five variables: year, sex, name, n and prop (n divided by total number of applicants in that year, which means proportions are of people of that gender with that name born in that year).
+
+**`flights`**: Dataset with flights that departed from NYC (JFL, LGA, or EWR airports). To see the description of the variables type `help(flights)`.
+
+**Q1** (2 points): Calculate the total number of children born each year over time, and then make a line graph to show the trend, and set color to the variable sex.
+
+```{r}
+# Your answers here
+```
+
+**Q2** (2 points): Identify the top 5 male and female names and show on the barplot, set color for different sex.
+
+```{r}
+# Your answers here
+```
+
+**Q3** (3 points): For each airport (dest), calculate the total number of flights, the average distance of all flights, and the average arrival delay of all flights, save the results in a dataset (give a name), and remove the airport "HNL" and the airports with less than 20 flights.
+
+```{r}
+# Your answers here
+```
+
+
+**Q4** (3 points): Use the dataset you created, provide a scatterplot to show the relationship between travel distance and arrival delay, set size to the total number of flights and the transparency of 0.5, and add a smooth line without showing the SE.
+
+What information can you get from the graph?
+
+```{r}
+# Your answers here
+```
+
+_Explanation here_

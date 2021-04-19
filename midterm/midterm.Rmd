@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Question 1 (1 pt) - Loading Datasets and Packages
 
-In the GitHub page, I placed three datasets:
+On the GitHub page, I placed five datasets:
 
 1. `corona.csv`
 2. `partial1.csv`

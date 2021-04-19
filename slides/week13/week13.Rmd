@@ -1,0 +1,459 @@
+---
+title: "QTM 151"
+subtitle: "Week 13 -- Shiny web applications <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+author: "Umberto Mignozzetti"
+date: "Apr 23"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
+    nature: 
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
+      highlightStyle: github
+      ratio: 4:3
+      self-contained: false
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+r <- getOption("repos")
+r["CRAN"] <- "https://cloud.r-project.org/"
+options(repos = r)
+```
+
+<style>
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+</style>
+
+# Recap
+
+.font130[
+
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly` and `plot_ly`: create nice plotly graphs.
+ + `dplyr` methods: data wrangling
+ + `dplyr *_join` methods: joining data
+ + `tidyr` methods: reshape datasets
+ + `forcats` methods: working with categorical variables
+ + `lubridate` methods: processing dates and times
+ + `maps` and `ggmap` for creating maps.
+
+**Great job!!**
+
+Do you have any questions about any of these contents?
+
+Today we are going to talk about Shiny Web Apps in R.
+
+]
+
+---
+
+# This week
+
+.font130[
+
+We will have a **quiz** posted today after 4:00 PM. Due by **Monday**
+
+We will have a **problem set** this week, posted Saturday, and due by next week.
+
+How is the final project going?
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+```{r}
+# Loading tidyverse
+library(tidyverse)
+library(maps)
+library(ggmap)
+library(nycflights13)
+```
+]
+
+---
+
+
+# Getting Started: loading data
+
+.font130[
+```{r}
+GAdat<-read.csv("https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/GAdat.csv")
+GAdat$County <- tolower(GAdat$County)
+head(GAdat, 2)
+```
+]
+
+---
+
+class: inverse, center, middle
+
+# ggmap
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# ggmap package
+
+.font130[
+
+The package makes it easy to retrieve raster map tiles from popular online mapping services like Stamen Maps and Google Maps
+
+It is easy to plot the info using the ggplot2 framework.
+
+Suppose we want to plot the average arrival delay of NY flights.
+
+```
+data1<-flights %>%
+  drop_na() %>%
+  group_by(dest) %>%
+  summarise(average=mean(arr_delay)) %>%
+  left_join(airports, by=c("dest"="faa"))
+head(data1, 2)
+```
+]
+
+---
+
+# ggmap package
+
+.font130[
+
+```
+us <- c(left = -125, bottom = 25.75, right = -67, top = 49)
+map <- get_stamenmap(us, zoom = 5, maptype = "toner-lite")
+ggmap(map)  # create a layer US map
+
+ggmap(map) + geom_point(data=data1, 
+    aes(x=lon, y=lat, color=average, size=average), na.rm = T) +
+  scale_color_gradient(low = "green", high="darkblue")
+```
+
+**Your turn**: do the same graph, but with the variable `distance`, instead of `arr_delay`. You should learn smt trivial!
+]
+
+---
+
+# ggmap package
+
+.font130[
+
+Let's now plot the number of flights from each destination.
+
+```
+data2<-flights %>%
+  drop_na() %>%
+  group_by(dest) %>%
+  summarise(sum=n()) %>%
+  left_join(airports, by=c("dest"="faa")) 
+head(data2, 2)
+```
+]
+
+---
+
+# ggmap package
+
+.font130[
+
+```
+us <- c(left = -125, bottom = 25.75, right = -67, top = 49)
+map <- get_stamenmap(us, zoom = 5, maptype = "toner-lite")
+ggmap(map)
+
+ggmap(map) + geom_point(data=data2,
+        aes(x=lon, y=lat, color=sum, size=sum), na.rm = T) +
+  scale_color_gradient(low = "blue", high="red")
+```
+
+**Your turn**: Plot the number of flights for the *Delta* (DL) carrier only.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# maps package
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# maps package
+
+.font130[
+
+It allows us to turn data from the maps into a data frame suitable for plotting with ggplot.
+
+The structure of the data needed:
+
+* `long`: longitude.
+* `lat`:  latitude.
+* `order`: shows in which order ggplot should “connect the dots”
+* `region` and `subregion`: tell what region or subregion a set of points surrounds.
+* `group`: ggplot2’s functions can take a group argument, which controls whether adjacent points should be connected by lines. 
+  + If they are in the same group, then they get connected, but if they are in different groups then they don't.
+
+]
+
+---
+
+# maps package
+
+Plot the USA map using *geom_polygon()*.
+
+*geom_polygon()* drawn lines between points and “closes them up” (i.e. draws a line from the last point back to the first point). 
+
+You have to map the group aesthetic to the group column.
+
+.font130[
+
+```
+# map_data function in maps package
+states<-map_data("state")  
+head(states)
+qplot(long, lat, data=states)
+qplot(long, lat, data=states, geom="path")
+```
+
+* And they look ugly...
+]
+---
+
+# maps package
+
+To make them look better, we need to group!
+
+.font130[
+
+```
+qplot(long, lat, data=states, geom="path", group=group)
+
+qplot(long, lat, data=states, geom="polygon", group=group)
+
+# color for boarder lines
+ggplot(states)+
+  geom_polygon(aes(x=long, y=lat, group=group), color="red") 
+
+# fill for inside color
+qplot(long, lat, data=states, geom="polygon", 
+  group=group, fill=long, color="red")
+```
+
+* And they look much better.
+]
+---
+
+# maps package
+
+.font130[
+
+We can also turn off the color legend:
+
+```
+states <- map_data("state")
+ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, fill = region, group = group), color = "white") + 
+  coord_fixed(1.3) +
+  guides(fill=FALSE)
+```
+]
+---
+
+# maps package
+
+.font130[
+
+We can also plot a subregion:
+
+```
+west_coast <- subset(states, region %in% c("california", "oregon", "washington"))
+
+ggplot(data = west_coast) + 
+  geom_polygon(aes(x = long, y = lat), fill = "palegreen", 
+    color = "black")
+```
+]
+---
+
+# maps package
+
+.font130[
+
+But we can do better:
+
+* group() 
+
+* coord_fixed(): it fixes the relationship between one unit in the y direction and one unit in the x direction. 
+ + Every y unit was 1.3 times longer than an x unit, the plot came out looking good.
+
+```
+ggplot(data = west_coast) + 
+  geom_polygon(aes(x = long, y = lat, group = group), 
+    fill = "palegreen", color = "black") + 
+  coord_fixed(1.3)
+```
+
+**Your Turn**: Do the same plot for a different set of states of your choice.
+]
+---
+
+
+# maps package
+
+.font130[
+
+And to plot only one state, we need to filter this state out of the dataset:
+
+```
+states <- map_data("state")
+
+ga_df <- states %>%
+  filter(region == "georgia")
+
+ggplot(data = ga_df) + 
+  geom_polygon(aes(x = long, y = lat), fill = "palegreen", color = "black")
+    
+ggplot(data = ga_df) + 
+  geom_polygon(aes(x = long, y = lat, group = group), fill = "palegreen", color = "black") + 
+  coord_quickmap()
+```
+
+**Your Turn**: Do the same plot for a different US state.
+]
+---
+
+# maps package
+
+.font130[
+
+Using theme_void(): you can make a plot with no background.
+
+```
+ga_base <- ggplot(data = ga_df, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_quickmap() + 
+  geom_polygon(color = "black", fill = "gray")
+
+ga_base + theme_void()
+```
+]
+---
+
+
+# maps package
+
+.font130[
+
+The package maps also have subregions and subdivisions within a given country.
+
+This is handful to plot counties in Georgia:
+
+```
+county_df <- map_data("county") %>% filter(region == "georgia")
+state_df <- map_data("state") %>% filter(region == "georgia")
+
+ga_base + theme_void() + 
+  geom_polygon(data = county_df, fill = NA, color = "white") +
+  geom_polygon(color = "black", fill = NA) 
+```
+]
+---
+
+
+# maps package
+
+.font130[
+
+And in the GAdat we have the population by county. We can plot this in the Georgia map:
+
+```
+county_df$subregion <- replace(county_df$subregion, county_df$subregion=="de kalb", "dekalb")
+
+mapdat <- left_join(GAdat,county_df, by = c("County"="subregion"))
+
+p <- ggplot(mapdat, aes(long, lat, group = group)) +
+    geom_polygon(aes(fill = Population), color="yellow")  +
+    scale_fill_gradient(low="blue", high="red")+
+    geom_polygon(data = state_df, colour = "black", fill = NA) + 
+    theme_void() +
+    coord_fixed(1.2) 
+p
+```
+]
+---
+
+# maps package
+
+.font130[
+
+And for an alternative map:
+
+```
+ggplot(mapdat, aes(long, lat, group = group)) +
+  geom_polygon(aes(fill = Population, color="yellow"),
+    colour = alpha("red", 1/2))  +
+  geom_polygon(data = state_df, colour = "black", fill = NA) + 
+  theme_void() + coord_fixed(1.2) +
+  scale_fill_gradientn(colours = rev(rainbow(7)),
+   breaks = c(2, 4, 10, 100, 1000, 10000), trans = "log10")
+```
+]
+---
+
+
+class: inverse, center, middle
+
+# Questions?
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
+
+---
+
+class: inverse, center, middle
+
+# Have a great weekend!
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>

@@ -1,0 +1,48 @@
+---
+title: "Homework 4 - Programming"
+author: "Your name here"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+**Instructions**: For the homework, create the required functions, and test them using some examples.
+
+**Q1** (3 points): Write a function that receives a string and return whether the string has more than five letters. Test your function with the two strings provided. (hint: nchar displays the number of characters in a string)
+
+```{r}
+# Provided strings
+s1 <- 'home' # should be smaller than five characters
+s2 <- 'my home' # should be bigger than five characters
+
+# Your answers here
+
+# Testing here
+```
+
+**Q2** (3 points): Create a function that receives the weight in pounds and the height in inches and return the BMI. Test with the provided height and weight
+
+```{r}
+# Provided data
+# height = 72 inches
+# weight = 200 pounds
+# BMI should be around 27.12
+
+# Your answers here
+
+# Testing here
+```
+
+**Q3** (4 points): Create a function that receives a text vector with preferred food, and returns a weekly menu. Test with the vector below. (hint: check out the function `sample`, for the case of sample with replacement.)
+
+```{r}
+# Provided foods
+foods <- c('pasta', 'pizza', 'apples', 'ice cream')
+
+# Your answers here
+
+# Testing here
+```

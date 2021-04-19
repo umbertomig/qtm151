@@ -1,0 +1,19 @@
+---
+title: "Key to Homework 6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+## Question 1 (10 pts)
+
+For the dataset `flu`, make a map to show the distribution of the peak number of flu cases at each state in one year of your choice.
+
+
+```{r}
+# Your answer here
+```
