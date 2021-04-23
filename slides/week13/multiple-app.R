@@ -10,8 +10,12 @@
 library(shiny)
 
 ui <- fluidPage(
-  tabsetPanel(tabPanel(title = "Normal",plotOutput("norm"),actionButton("renorm", "Resample")),
-              tabPanel(title = "Uniform",plotOutput("unif"),actionButton("reuni", "Resample"))
+  tabsetPanel(tabPanel(title = "Normal",
+                       plotOutput("norm"),
+                       actionButton("renorm", "Resample")),
+              tabPanel(title = "Uniform",
+                       plotOutput("unif"),
+                       actionButton("reuni", "Resample"))
   )
 )
 
@@ -23,8 +27,12 @@ server <- function(input, output) {
     norm = rnorm(100), 
     unif = runif(100))
   
-  observeEvent(input$renorm, handlerExpr = {rv$norm <- rnorm(100)} )
-  observeEvent(input$reuni, handlerExpr = {rv$unif <- runif(100)} )
+  observeEvent(input$renorm, handlerExpr = {
+    rv$norm <- rnorm(100)
+    })
+  observeEvent(input$reuni, handlerExpr = {
+    rv$unif <- runif(100)
+    } )
 
   output$norm <- renderPlot({
     hist(rv$norm, col ="blue")

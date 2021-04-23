@@ -11,9 +11,6 @@ library(car)
 library(tidyverse)
 library(shiny)
 
-data(Prestige)
-Prestige <- Prestige %>% na.omit()
-
 ui <- fluidPage(
   
   titlePanel("Prestige and Income data"),   
@@ -32,8 +29,11 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   output$scatterplot <- renderPlot({ 
-    data<-Prestige[Prestige$type==input$type,]
-    ggplot(data, aes(x=education,y=prestige))+geom_point()
+    dat <- Prestige %>%
+      filter(type == input$type)
+    ggplot(dat, aes(x=education,y=prestige)) + 
+      geom_point() + geom_smooth(method = 'lm') +
+      geom_rug()
   })
  
 }

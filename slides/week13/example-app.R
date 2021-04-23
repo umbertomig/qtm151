@@ -1,5 +1,3 @@
-
-
 #
 # Find out more about building applications with Shiny here:
 #
@@ -9,13 +7,17 @@
 library(car)
 library(shiny)
 
+data(Prestige)
+Prestige <- Prestige %>% na.omit()
+
 ui <- fluidPage(
-  
-  titlePanel("Prestige and Income data"),    # using comma to separate each part
+  # using comma to separate each part
+  titlePanel("Prestige and Income data"),    
   
   selectInput(inputId = "type", 
-              label = "Job type", 
-              choices = Prestige$type), 
+              label = "Job type",
+              selected = 'bc',
+              choices = Prestige$type),
 
   
   mainPanel(
@@ -28,15 +30,18 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   output$scatterplot <- renderPlot({ 
-    data<-Prestige[Prestige$type==input$type,]
-    plot(x= data$education,y= data$prestige, 
-         xlab="Education", ylab="Prestige", 
-         pch=16,cex=2,col="blue")
+    dat <- Prestige %>%
+      filter(type == input$type)
+    plot(x = dat$education, 
+         y = dat$prestige, 
+         xlab = "Education", ylab = "Prestige", 
+         pch = 16, cex = 2, col = "blue")
   })
   
   output$histogram <- renderPlot({ 
-    data<-Prestige[Prestige$type==input$type,]
-    hist(data$income, col = "grey")
+    dat <- Prestige %>%
+      filter(type == input$type)
+    hist(dat$income, col = "grey")
   })
   
 }
