@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>QTM 151</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Umberto Mignozzetti" />
+    <script src="lab4_files/header-attrs/header-attrs.js"></script>
+    <link href="lab4_files/remark-css/default.css" rel="stylesheet" />
+    <link href="lab4_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="lab4_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# QTM 151
+## Lab 04 – forcats
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#f2a900' size=1px width=800px>
+</html>
+### Umberto Mignozzetti
+### Summer
+
+---
+
+
+
+
+&lt;style&gt;
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+&lt;/style&gt;
+
+# Recap
+
+.font130[
+
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly`: transform ggplot objects into nice plotly viz.
+ + `plot_ly`: create nice plotly graphs.
+ + `dplyr *_join` methods: joining data
+
+**Great job!!**
+
+Do you have any questions about any of these contents?
+
+Today we are going to talk about **forcats** (package for categorical variables)
+
+]
+
+---
+
+# Today's Class
+
+.font130[
+
+We have a **quiz** for today's class, due by the next class.
+
+Are you done with DataCamp? Is it being helpful?
+
+What about the final project? Are you in contact with your group?
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+
+```r
+# Loading tidyverse
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+```
+
+```
+## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.2     ✓ dplyr   1.0.7
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.1
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+]
+
+---
+
+# Loading data - GSS
+
+.font130[
+
+```r
+# Loading the GSS Cat and GSS
+gss_cat &lt;- read_csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss_cat.csv')
+```
+
+```
+## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   year = col_double(),
+##   marital = col_character(),
+##   age = col_double(),
+##   race = col_character(),
+##   rincome = col_character(),
+##   partyid = col_character(),
+##   relig = col_character(),
+##   denom = col_character(),
+##   tvhours = col_double()
+## )
+```
+
+```r
+head(gss_cat, 2)
+```
+
+```
+## # A tibble: 2 x 9
+##    year marital      age race  rincome    partyid      relig   denom     tvhours
+##   &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;
+## 1  2000 Never mar…    26 White $8000 to … Ind,near rep Protes… Southern…      12
+## 2  2000 Divorced      48 White $8000 to … Not str rep… Protes… Baptist-…      NA
+```
+
+```r
+gss &lt;- read_csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv')
+```
+
+```
+## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   region = col_character(),
+##   income = col_character(),
+##   happy = col_character(),
+##   age = col_double(),
+##   finrela = col_character(),
+##   marital = col_character(),
+##   degree = col_character(),
+##   health = col_character(),
+##   wrkstat = col_character(),
+##   partyid = col_character(),
+##   polviews = col_logical(),
+##   sex = col_character(),
+##   year = col_double()
+## )
+```
+
+```
+## Warning: 46063 parsing failures.
+##  row      col           expected               actual                                                                        file
+## 1505 polviews 1/0/T/F/TRUE/FALSE MODERATE             'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
+## 1506 polviews 1/0/T/F/TRUE/FALSE SLGHTLY CONSERVATIVE 'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
+## 1507 polviews 1/0/T/F/TRUE/FALSE CONSERVATIVE         'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
+## 1508 polviews 1/0/T/F/TRUE/FALSE CONSERVATIVE         'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
+## 1509 polviews 1/0/T/F/TRUE/FALSE CONSERVATIVE         'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
+## .... ........ .................. .................... ...........................................................................
+## See problems(...) for more details.
+```
+
+```r
+head(gss, 2)
+```
+
+```
+## # A tibble: 2 x 13
+##   region   income  happy    age finrela marital degree  health wrkstat  partyid 
+##   &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;   
+## 1 E. NOR.… $10000… NOT T…    54 AVERAGE MARRIED LT HIG… FAIR   WORKING… OTHER P…
+## 2 E. NOR.… $7000 … VERY …    51 AVERAGE MARRIED LT HIG… GOOD   KEEPING… NOT STR…
+## # … with 3 more variables: polviews &lt;lgl&gt;, sex &lt;chr&gt;, year &lt;dbl&gt;
+```
+]
+
+---
+
+class: inverse, center, middle
+
+# forcats
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# forcats
+
+.font130[
+Provide tools to work with categorical data. The methods we will use in here are:
+
+* `fct_reorder()`: reorder levels in a categorical variable
+* `fct_relevel()`: move the position of a particular level
+* `fct_infreq()`: reorder levels in increasing frequency
+* `fct_recode()`: recode factor variable
+* `fct_collapse()`: collapse levels in categorical variable
+* `fct_lump()`: lump together small groups
+* `case_when()`: useful to recode data
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_reorder
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_reorder
+
+.font130[
+
+Suppose we want to study the relationship between religion and time watching tv.
+
+This graph here doesn't help much:
+
+```
+relig_summary &lt;- gss_cat %&gt;%
+  group_by(relig) %&gt;%
+  summarise(tvhours=mean(tvhours, na.rm = T)) 
+
+ggplot(relig_summary, aes(x=tvhours, y=relig)) +
+  geom_point()
+```
+]
+
+---
+
+# fct_reorder
+
+.font130[
+
+Reordering the levels of a factor using *fct_reorder()* helps with the interpretation.
+
+*fct_reorder()* takes three arguments:
+
+- f, the factor whose levels you want to modify.
+
+- x, a numeric vector that you want to use to reorder the levels.
+
+- Optionally, fun, a function used if there are multiple values of x for each value of f. The default value is median.
+
+```
+ggplot(relig_summary, aes(x=tvhours, y=fct_reorder(relig, tvhours))) +
+  geom_point()
+```
+
+**Your turn:** plot the marital status by frequency (use the function counts). Then reorder it.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_relevel
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_relevel
+
+.font130[
+
+In the religions x tv hours plot, note that the "Don't know" is the largest category.
+
+It is also not very informative. We can easily send it to the bottom:
+
+```
+ggplot(relig_summary, 
+       aes(x = tvhours, 
+           y = fct_relevel(relig, "Don't know", after=0))) +
+    geom_point()
+```
+]
+
+---
+
+# fct_relevel
+
+.font130[
+
+Can we do ascending, and place the "Don't know" in the bottom?
+
+Yes!
+
+```
+ggplot(relig_summary, 
+       aes(x=tvhours, 
+           y = fct_reorder(relig, tvhours) %&gt;%
+             fct_relevel("Don't know", after=0))) + 
+  geom_point()
+```
+
+**Your turn:** plot the party id by frequency (use the function counts). Then reorder it. Then place "No answer" and "Independent" at the bottom.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_infreq
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_infreq
+
+.font130[
+
+You can use `fct_infreq()` to order levels in increasing frequency:.
+
+* This is the simplest type of reordering because it does not need any extra variables.
+
+You may want to combine with `fct_rev()`.
+
+```
+gss_cat %&gt;%
+  mutate(marital = fct_infreq(marital)) %&gt;%
+  ggplot(aes(marital)) +
+    geom_bar()
+```
+]
+
+---
+
+# fct_infreq + fct_rev (elegant)
+
+.font130[
+
+And that's what happens when we combine both:
+
+```
+gss_cat %&gt;%
+mutate(marital = marital %&gt;% fct_infreq() %&gt;% fct_rev()) %&gt;%
+  ggplot(aes(marital)) + geom_bar()
+```
+
+**Your turn:** plot the race by frequency.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_recode
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_recode
+
+.font130[
+
+Recode a categorical variable is always painful, regardless of the statistical software. 
+
+Luckly, the people that wrote forcats made it as easy as it can be by creating the `fct_recode` function.
+
+Check this plot. TV hours by party affiliation:
+
+```
+gss_cat %&gt;% 
+  drop_na(tvhours) %&gt;% 
+  group_by(partyid) %&gt;%
+  summarise(meantv=mean(tvhours)) %&gt;%
+  ggplot(aes(x=meantv, y=fct_reorder(partyid, meantv)))+
+  geom_point()
+```
+]
+
+---
+
+# fct_recode
+
+.font130[
+
+Note that we can combine some low-information categories together as `others`:
+
+```
+gss_cat %&gt;%
+  drop_na(tvhours) %&gt;%
+  mutate(partyidnew = fct_recode(partyid,
+    "Republican, strong"    = "Strong republican",
+    "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep",
+    "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat",
+    "Democrat, strong"      = "Strong democrat",
+    "Other"                 = "No answer",
+    "Other"                 = "Don't know",
+    "Other"                 = "Other party")) %&gt;%    
+  group_by(partyidnew) %&gt;%
+  summarise(meantvhours = mean(tvhours)) %&gt;%
+  ggplot(aes(x=meantvhours, 
+             y=fct_reorder(partyidnew, meantvhours))) +
+  geom_point()
+```
+
+**Your turn:** plot the health in the gss dataset. Recode to make it interesting.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_collapse
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_collapse
+
+.font130[
+
+`fct_collapse` is good to put several factor levels together.
+
+Look at this code for party id frequency:
+
+```
+gss_cat %&gt;%
+  mutate(partyidnew = fct_collapse(partyid,
+    other = c("No answer", "Don't know", "Other party"),
+    rep = c("Strong republican", "Not str republican"),
+    ind = c("Ind,near rep", "Independent", "Ind,near dem"),
+    dem = c("Not str democrat", "Strong democrat")
+  )) %&gt;%
+  count(partyidnew)
+```
+
+**Your turn:** collapse the gss `wrkstat` variable to simplify it.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# fct_lump
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_lump
+
+.font130[
+
+`fct_lump` aggregates the small-frequency levels together.
+
+The default is the most frequent + others:
+
+```
+gss_cat %&gt;%
+  mutate(relignew = fct_lump(relig)) %&gt;%
+  count(relignew)
+```
+
+]
+
+---
+
+
+# fct_lump
+
+.font130[
+
+If we want the five most frequent values + others:
+
+```
+gss_cat %&gt;%
+  mutate(relig = fct_lump(relig, n=5)) %&gt;%
+  count(relig)
+```
+
+**Your turn:** count the levels in the `gss_cat` `denom` variable. Find a nice way to display it.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# case_when
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# case_when
+
+.font130[
+
+`case_when` is useful for recoding variables. Look at the example below:
+
+```
+mtcars %&gt;%
+  mutate (
+    gear_char =
+      case_when(
+        gear==3 ~ "three",
+        gear==4 ~ "four",
+        gear==5 ~ "five"
+      )
+  )
+```
+
+**Your turn:** for `gss_cat`, create a plot to look at how average age varies across income level (rincome)
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+
+---
+
+class: inverse, center, middle
+
+# See you next class!
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "4:3",
+"self-contained": false,
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

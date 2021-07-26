@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>QTM 151</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Umberto Mignozzetti" />
+    <script src="lab5_files/header-attrs/header-attrs.js"></script>
+    <link href="lab5_files/remark-css/default.css" rel="stylesheet" />
+    <link href="lab5_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="lab5_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# QTM 151
+## Lab 05 – lubridate
+<html>
+<div style="float:left">
+
+</div>
+<hr color='#f2a900' size=1px width=800px>
+</html>
+### Umberto Mignozzetti
+### Summer
+
+---
+
+
+
+
+&lt;style&gt;
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+&lt;/style&gt;
+
+# Recap
+
+.font130[
+
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly` and `plot_ly`: create nice plotly graphs.
+ + `dplyr *_join` methods: joining data
+ + `forcats` methods: working with categorical variables
+
+**Great job!!**
+
+Do you have any questions about any of these contents?
+
+Today we are going to talk about **lubridate** (package for dates and time)
+
+]
+
+---
+
+# This class
+
+.font130[
+
+We have a **quiz** due by the next class.
+
+We have the next batch of DataCamp Assignments due soon.
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+class: inverse, center, middle
+
+# Getting Started
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+
+```r
+# Loading tidyverse
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+```
+
+```
+## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.2     ✓ dplyr   1.0.7
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.1
+```
+
+```
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+
+```r
+library(lubridate)
+```
+
+```
+## 
+## Attaching package: 'lubridate'
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     date, intersect, setdiff, union
+```
+]
+
+---
+
+class: inverse, center, middle
+
+# lubridate
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# lubridate
+
+.font130[
+Provide tools to work with dates. The methods we will use in here are:
+
+* `ymd()`, `ydm()`, `mdy()`, `myd()`, `dmy()`, `dym()`: read text into data, provided in this order.
+* `parse_date_time()`: parse other date and time objects.
+* `make_date()` and `make_datetime()`: parse dates and times.
+* `round_dates()` and others: round dates and times.
+* `difftime()`: time/dates differences.
+* `now()` and `today()`: current dates and times.
+* `seconds()`, `dseconds()` and others: create time spans and durations.
+* `%--%` and date intervals: create and check date intervals.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Dates and Strings
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Dates and Strings
+
+.font130[
+
+Without declare an object as a date, it is just a string.
+
+Check that in R (for ISO 8601):
+
+```
+dt &lt;- '2021-02-22'
+class(dt)
+str(dt)
+
+dt &lt;- as.Date(dt)
+class(dt)
+str(dt)
+```
+]
+
+
+---
+
+class: inverse, center, middle
+
+# ymd() and related functions
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# ymd() and related functions
+
+.font130[
+
+These functions are great to parse dates:
+
+```
+x &lt;- "2010 September 20th"
+ymd(x)
+
+y &lt;- "02.01.2010"
+dmy(y)
+
+z &lt;- "Sep, 12th 2010 14:00"
+mdy_hm(z)
+
+a &lt;- "2016-07-08 12:34:56"
+ymd_hms(a)
+```
+]
+
+---
+
+# ymd() and related functions
+
+.font130[
+
+**Your turn:** Turn into date:
+
+1. "2010-01-22"
+2. "12-02-1234 12:30:25"
+3. "May 18, 1933"
+4. "1st June 2012"
+
+]
+
+---
+
+class: inverse, center, middle
+
+# parse_date_time
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# parse_date_time
+
+.font130[
+
+`parse_date_time()` takes two arguments: First, a vector with dates. Second, a vector with orders to parse.
+
+E. g.: `parse_date_time(date = "some_date", order = "some_order")`
+
+Some patterns:
+
+- `dmy`: day, month, year (4-digit)
+- `mdY`: month, day, year (2-digit)
+- `ymdHMS`: year (4-digit), month, day, hours, minutes, seconds
+
+For more: `help(parse_date_time)`
+]
+
+---
+
+# parse_date_time
+
+.font130[
+
+Examples:
+
+```
+parse_date_time(c("11-01-2016", "2016 Jan 11th"),
+  order = c("dmy", "ymd"))
+parse_date_time("11-01-2016", order = "dmy")
+```
+
+**Your turn:** Parse:
+
+1. `x &lt;- c("April 13, 2003", "17 April 2005")`
+2. `y &lt;- "January 10, 2020 at 23:30:35"`
+
+]
+
+---
+
+class: inverse, center, middle
+
+# make_date() and make_datetime()
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# make_date() and make_datetime()
+
+.font130[
+
+Both functions work to build date and time from pieces. The syntax for both functions is straightforward:
+
+```
+make_date(year = 2012, month = 3, day = 27)
+
+make_datetime(year = 1234, month = 5, day = 12, 
+  hour = 1, min = 23, sec = 45)
+```
+
+**Your turn:** make dates from:
+- yrs &lt;- c(1234, 1222, 2020)
+- mos &lt;- c(4, 2, 12)
+- dss &lt;- c(12, 12, 20)
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Extract parts functions
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Extract parts functions
+
+.font130[
+
+- year(): Year with century
+- month(): Month
+- day(): Day of month
+- hour(): Hour
+- min(): Minute
+- second(): Second
+- wday(): Weekday
+- yday(): Day of year
+- tz(): Timezone
+- quarter(): Quarter
+- semester(): Semester
+
+]
+
+---
+
+# Extract parts functions
+
+.font150[
+
+**Your turn:** Parse the dates and try these functions with:
+
+1. "2010-01-22"
+2. "12-02-1234 12:30:25"
+
+]
+
+---
+
+class: inverse, center, middle
+
+# round_dates() and others
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# round_dates() and others
+
+.font130[
+
+To round dates we can use:
+
+- `round_dates()`: round to the nearest precision.
+- `ceiling_date()`: round up the nearest precision.
+- `floor_dates()`: round down the nearest precision.
+
+Precision units:
+
+- "second" , "minute" , "hour" , "day" , "week" , "month",
+"bimonth" , "quarter" , "halfyear" , "year", or multiples (e.g. "10 minutes")
+
+]
+
+---
+
+# round_dates() and others
+
+.font130[
+
+Examples:
+
+```
+d &lt;- ymd_hms("1234-04-03 07:13:28 UTC")
+floor_date(d, unit = 'day')
+
+# Round to nearest 5 minutes
+round_date(d, unit = '5 minutes')
+
+# Round up to week 
+ceiling_date(d, unit = 'week')
+
+# Fun
+ceiling_date(d, unit = 'hour') - floor_date(d, unit = 'hour')
+```
+
+**Your turn:** Round `d` in the three different ways: `d &lt;- ymd_hms("1981-08-18 18:08:28 UTC")`
+
+]
+
+---
+
+class: inverse, center, middle
+
+# difftime
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# difftime
+
+.font130[
+
+We can find difference between two dates using difftime.
+
+```
+difftime(today(), mdy("May 20, 2020"), units = 'days')
+difftime(now(), mdy_hms("May 20, 2020 22:12:22"), units = 'secs')
+```
+
+**Your turn:** Find how many seconds since your birthday.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# seconds(), dseconds() and other duration functions
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# seconds(), dseconds() and other duration functions
+
+.font130[
+
+We can use duration to change dates:
+
+```
+today() - years(1)
+today() + month(1)
+days(2)
+ddays(2)
+now() + seconds(20)
+2*days()
+```
+
+**Your turn:** Find how many seconds since your birthday.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Intervals
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Intervals
+
+.font130[
+
+We can also compute intervals:
+
+```
+x &lt;- dmy("2 January 1998") %--% dmy("30 March 2018")
+y &lt;- dmy("2 January 2017") %--% dmy("30 March 2020")
+int_start(x)
+int_end(x)
+int_length(x)
+as.period(x)
+dmy("5 January 1998") %within% x
+dmy("5 January 1998") %within% y
+int_overlaps(x, y)
+```
+
+**Your turn:** Compute one interval between your birthday and today. Check it. Does it contains the date `January 20 2000`?
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# Questions?
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+
+---
+
+class: inverse, center, middle
+
+# See you next class!
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "4:3",
+"self-contained": false,
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
