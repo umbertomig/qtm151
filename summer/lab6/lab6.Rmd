@@ -67,8 +67,6 @@ We learned:
 
 Do you have any questions about any of these contents?
 
-**No quiz this week**
-
 Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
