@@ -244,7 +244,7 @@ class: inverse, center, middle
 
 .font130[
 
-To tidy  a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
+To tidy a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
 
 Syntax:
 ```
@@ -371,7 +371,7 @@ table5
 We can also separate by position:
 
 ```{r}
-separate(table3, year, into = c("century", "year"), sep=2)
+separate(table3, year, into = c("century", "decade"), sep=2)
 ```
 
 **Your Turn**: Do the same to separate `tbl3` year by position.

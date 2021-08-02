@@ -96,9 +96,9 @@ library(tidyverse)
 
 ```
 ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.2     ✓ dplyr   1.0.7
+## ✓ tibble  3.1.3     ✓ dplyr   1.0.7
 ## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   1.4.0     ✓ forcats 0.5.1
+## ✓ readr   2.0.0     ✓ forcats 0.5.1
 ```
 
 ```
@@ -125,7 +125,7 @@ table1
 ```
 
 ```
-## # A tibble: 3 x 3
+## # A tibble: 3 × 3
 ##   country         `1999`     `2000`
 ##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
 ## 1 Afghanistan   19987071   20595360
@@ -144,7 +144,7 @@ table2
 ```
 
 ```
-## # A tibble: 3 x 3
+## # A tibble: 3 × 3
 ##   country     `1999` `2000`
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 Afghanistan    745   2666
@@ -170,7 +170,7 @@ table3
 ```
 
 ```
-## # A tibble: 12 x 4
+## # A tibble: 12 × 4
 ##    country      year type            count
 ##    &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
 ##  1 Afghanistan  1999 case              745
@@ -204,7 +204,7 @@ table4
 ```
 
 ```
-## # A tibble: 6 x 3
+## # A tibble: 6 × 3
 ##   country      year rate             
 ##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
 ## 1 Afghanistan  1999 745/19987071     
@@ -233,7 +233,7 @@ tbl1
 ```
 
 ```
-## # A tibble: 3 x 3
+## # A tibble: 3 × 3
 ##   county `2010` `2011`
 ##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 DeKalb 691961 693961
@@ -252,7 +252,7 @@ tbl2
 ```
 
 ```
-## # A tibble: 3 x 3
+## # A tibble: 3 × 3
 ##   county `2010` `2011`
 ##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 DeKalb  36189  36389
@@ -278,7 +278,7 @@ tbl3
 ```
 
 ```
-## # A tibble: 12 x 4
+## # A tibble: 12 × 4
 ##    country  year type        count
 ##    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
 ##  1 DeKalb   2010 veterans    36189
@@ -313,7 +313,7 @@ tbl4
 ```
 
 ```
-## # A tibble: 6 x 3
+## # A tibble: 6 × 3
 ##   country  year prop        
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       
 ## 1 DeKalb   2010 36189/691961
@@ -371,7 +371,7 @@ class: inverse, center, middle
 
 .font130[
 
-To tidy  a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
+To tidy a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
 
 Syntax:
 ```
@@ -394,7 +394,7 @@ gather(table1, `1999`,`2000`, key="year", value="population")
 ```
 
 ```
-## # A tibble: 6 x 3
+## # A tibble: 6 × 3
 ##   country     year  population
 ##   &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
 ## 1 Afghanistan 1999    19987071
@@ -420,7 +420,7 @@ gather(table2, "1999":"2000", key=year, value = cases)
 ```
 
 ```
-## # A tibble: 6 x 3
+## # A tibble: 6 × 3
 ##   country     year   cases
 ##   &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;
 ## 1 Afghanistan 1999     745
@@ -474,7 +474,7 @@ spread(table3, key= "type", value= "count")
 ```
 
 ```
-## # A tibble: 6 x 4
+## # A tibble: 6 × 4
 ##   country      year   case population
 ##   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
 ## 1 Afghanistan  1999    745   19987071
@@ -527,7 +527,7 @@ table5
 ```
 
 ```
-## # A tibble: 6 x 4
+## # A tibble: 6 × 4
 ##   country      year case   population
 ##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
 ## 1 Afghanistan  1999 745    19987071  
@@ -555,7 +555,7 @@ separate(table3, year, into = c("century", "year"), sep=2)
 ```
 
 ```
-## # A tibble: 12 x 5
+## # A tibble: 12 × 5
 ##    country     century year  type            count
 ##    &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;
 ##  1 Afghanistan 19      99    case              745
@@ -601,7 +601,7 @@ unite(table5, col = rate, case, population, sep="/")
 ```
 
 ```
-## # A tibble: 6 x 3
+## # A tibble: 6 × 3
 ##   country      year rate             
 ##   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
 ## 1 Afghanistan  1999 745/19987071     
@@ -644,7 +644,7 @@ df
 ```
 
 ```
-## # A tibble: 3 x 5
+## # A tibble: 3 × 5
 ##   group item_id item_name value1 value2
 ##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;  &lt;int&gt;
 ## 1     1       1 a              1      4
@@ -666,7 +666,7 @@ df %&gt;% complete(group, nesting(item_id, item_name))
 ```
 
 ```
-## # A tibble: 4 x 5
+## # A tibble: 4 × 5
 ##   group item_id item_name value1 value2
 ##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;  &lt;int&gt;
 ## 1     1       1 a              1      4
