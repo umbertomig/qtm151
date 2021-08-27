@@ -14,15 +14,13 @@ library(shiny)
 ui <- fluidPage(
   
   titlePanel("Prestige and Income data"),   
- 
-  sidebarPanel( 
   selectInput(inputId = "type", 
               label = "Job type", 
-              choices = Prestige$type)
-),
-  mainPanel(
-    plotOutput(outputId = "scatterplot")
-  )
+              choices = Prestige$type),
+  sliderInput('slidemin', 
+              'Choose a minimum threshold for prestige: ',
+              value = 0, max = 50, min = 0),
+  plotOutput(outputId = "scatterplot")
   
 )
 
@@ -31,7 +29,7 @@ server <- function(input, output) {
   output$scatterplot <- renderPlot({ 
     dat <- Prestige %>%
       filter(type == input$type)
-    ggplot(dat, aes(x=education,y=prestige)) + 
+    ggplot(dat, aes(x = education, y = prestige)) + 
       geom_point() + geom_smooth(method = 'lm') +
       geom_rug()
   })

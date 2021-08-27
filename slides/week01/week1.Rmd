@@ -1,0 +1,196 @@
+---
+title: "QTM 151"
+subtitle: "Lab 01 - Intro and GitHub <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+author: "Umberto Mignozzetti"
+date: ""
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
+    nature: 
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
+      highlightStyle: github
+      ratio: 4:3
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+r <- getOption("repos")
+r["CRAN"] <- "http://cran.cnr.berkeley.edu/"
+options(repos = r)
+```
+
+<style>
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+</style>
+
+---
+
+class: inverse, center, middle
+
+# Welcome to QTM 151!
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Today's Agenda
+
+.font150[
+
+About the QTM 151 class
+
+Introductions
+
+GitHub
+]
+
+---
+
+class: inverse, center, middle
+
+# QTM151
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# QTM151
+
+.font130[
+This class will perfect your computational stats skills
+
+We will work with R and R Studio, to teach you:
+* To build graphs, maps, interactive webapps
+* Data wrangling and high level processing.
+
+All in one 45-minutes class every week!
+
+Let's check the syllabus!
+]
+
+---
+
+class: inverse, center, middle
+
+# Introductions
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Introductions
+
+.font130[
+My name is Umberto Mignozzetti
+
+I am a Political Scientist, with Ph.D. from NYU.
+
+My work concentrates in the field of Comparative Political Economy, where I study how to improve welfare in developing economies.
+
+I am Brazilian, and in my free time I love to watch and play soccer (nowadays mostly in my videogame).
+]
+
+---
+
+# Introductions
+
+.font150[
+What about you?
+
+* What is your name?
+
+* What is your major (current or planned)?
+
+* Tell me something cool about you.
+]
+
+---
+
+class: inverse, center, middle
+
+# GitHub
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# GitHub
+
+.font130[
+GitHub is one of the best platforms for saving and retrieving code.
+
+You can save code, check older versions of your own code, and also, build a portfolio that later the firms that will hire you can check.
+
+For this class, I strongly encourage you to use GitHub extensively.
+
+Our GitHub class page is: https://github.com/umbertomig/qtm151
+
+Let's check my GitHub!
+]
+
+---
+
+class: inverse, center, middle
+
+# Expectations
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Expectations
+
+.font150[
+This is a hands-on class!
+
+I expect you to be on time, and bring your computer.
+
+But if you feel sick, please stay at home: all classes, besides this first one, will be recorded.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+
+---
+
+class: inverse, center, middle
+
+# See you next class!
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>

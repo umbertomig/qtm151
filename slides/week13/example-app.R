@@ -5,6 +5,7 @@
 #
 
 library(car)
+library(tidyverse)
 library(shiny)
 
 data(Prestige)

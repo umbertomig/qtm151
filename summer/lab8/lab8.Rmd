@@ -1,0 +1,133 @@
+---
+title: "QTM 151"
+subtitle: "Lab 08 -- Shiny web applications <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+author: "Umberto Mignozzetti"
+date: "Summer"
+output: 
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts]
+    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
+    nature: 
+      beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
+      highlightStyle: github
+      ratio: 4:3
+      self-contained: false
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+r <- getOption("repos")
+r["CRAN"] <- "https://cloud.r-project.org/"
+options(repos = r)
+```
+
+<style>
+
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: #f2a900;
+}
+
+.orange {
+  color: #f2a900;
+}
+</style>
+
+# Recap
+
+.font130[
+
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly` and `plot_ly`: create nice plotly graphs.
+ + `dplyr *_join` methods: joining data
+ + `forcats` methods: working with categorical variables
+ + `lubridate` methods: processing dates and times
+ + `tidyr` methods: reshape datasets
+ + `maps` and `ggmap` for creating maps.
+
+**Great job!!**
+
+Do you have any questions about any of these contents?
+
+Today we are going to talk about Shiny Web Apps in R.
+
+]
+
+---
+
+# This Class
+
+.font130[
+
+We have a quiz for this class, due in a few days. Please let me know if you have any questions.
+
+How is the final project going? Do you need my help?
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+class: inverse, center, middle
+
+# Shiny Webapps
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# Getting Started: loading packages
+
+.font130[
+```{r}
+# Loading tidyverse
+library(tidyverse)
+library(shiny)
+```
+]
+
+---
+
+
+# Getting Started: loading data
+
+.font130[
+We will use the shiny presentation by Garrett Grolemund, one of the R Studio main Data Scientists
+]
+
+---
+
+class: inverse, center, middle
+
+# Questions?
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
+
+---
+
+class: inverse, center, middle
+
+# Thank you so much for the class! I hope to see you soon in my QTM 385 class!
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
