@@ -2,7 +2,7 @@
 title: "QTM 151"
 subtitle: "Week 7 -- tidyr <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
-date: "Mar 12"
+date: ""
 output: 
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts]
@@ -65,8 +65,6 @@ We learned:
  + `dplyr *_join` methods: joining data
 
 Do you have any questions about any of these contents?
-
-**No quiz this week**
 
 Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
