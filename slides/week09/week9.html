@@ -22,7 +22,6 @@ class: center, middle, inverse, title-slide
 <hr color='#f2a900' size=1px width=800px>
 </html>
 ### Umberto Mignozzetti
-### Mar 26
 
 ---
 
@@ -76,25 +75,6 @@ Today we are going to talk about **forcats** (package for categorical variables)
 
 ---
 
-# This week
-
-.font130[
-
-We will have a **quiz** posted today after 4:00 PM. Due by **Tuesday** (because of the holidays this week).
-
-We will have a **problem set** posted tomorrow, due by the next lab.
-
-Thank you for your answers to the matching survey. I will match you later today.
-
-Thank you very much for your answers to the midterm evaluations survey. I will send you the overall results in an announcement later tomorrow. 
-
-There are a few changes that I can do to improve the class. Thanks to your answers, I have a clear path to improve things.
-
-Our GitHub page is: https://github.com/umbertomig/qtm151
-]
-
----
-
 class: inverse, center, middle
 
 # Getting Started
@@ -113,14 +93,14 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
 ```
 
 ```
-## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
-## ✓ tibble  3.1.0     ✓ dplyr   1.0.5
+## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
 ## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   1.4.0     ✓ forcats 0.5.0
+## ✓ readr   2.0.0     ✓ forcats 0.5.1
 ```
 
 ```
@@ -142,19 +122,20 @@ gss_cat &lt;- read_csv('https://raw.githubusercontent.com/umbertomig/qtm151/main
 ```
 
 ```
-## 
+## Rows: 21483 Columns: 9
+```
+
+```
 ## ── Column specification ────────────────────────────────────────────────────────
-## cols(
-##   year = col_double(),
-##   marital = col_character(),
-##   age = col_double(),
-##   race = col_character(),
-##   rincome = col_character(),
-##   partyid = col_character(),
-##   relig = col_character(),
-##   denom = col_character(),
-##   tvhours = col_double()
-## )
+## Delimiter: ","
+## chr (6): marital, race, rincome, partyid, relig, denom
+## dbl (3): year, age, tvhours
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 ```r
@@ -162,11 +143,11 @@ head(gss_cat, 2)
 ```
 
 ```
-## # A tibble: 2 x 9
-##    year marital      age race  rincome    partyid      relig   denom     tvhours
-##   &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;
-## 1  2000 Never mar…    26 White $8000 to … Ind,near rep Protes… Southern…      12
-## 2  2000 Divorced      48 White $8000 to … Not str rep… Protes… Baptist-…      NA
+## # A tibble: 2 × 9
+##    year marital         age race  rincome       partyid    relig denom   tvhours
+##   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1  2000 Never married    26 White $8000 to 9999 Ind,near … Prot… Southe…      12
+## 2  2000 Divorced         48 White $8000 to 9999 Not str r… Prot… Baptis…      NA
 ```
 
 ```r
@@ -174,35 +155,20 @@ gss &lt;- read_csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/dat
 ```
 
 ```
-## 
-## ── Column specification ────────────────────────────────────────────────────────
-## cols(
-##   region = col_character(),
-##   income = col_character(),
-##   happy = col_character(),
-##   age = col_double(),
-##   finrela = col_character(),
-##   marital = col_character(),
-##   degree = col_character(),
-##   health = col_character(),
-##   wrkstat = col_character(),
-##   partyid = col_character(),
-##   polviews = col_logical(),
-##   sex = col_character(),
-##   year = col_double()
-## )
+## Rows: 53474 Columns: 13
 ```
 
 ```
-## Warning: 46063 parsing failures.
-##  row      col           expected               actual                                                                        file
-## 1505 polviews 1/0/T/F/TRUE/FALSE MODERATE             'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
-## 1506 polviews 1/0/T/F/TRUE/FALSE SLGHTLY CONSERVATIVE 'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
-## 1507 polviews 1/0/T/F/TRUE/FALSE CONSERVATIVE         'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
-## 1508 polviews 1/0/T/F/TRUE/FALSE CONSERVATIVE         'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
-## 1509 polviews 1/0/T/F/TRUE/FALSE CONSERVATIVE         'https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv'
-## .... ........ .................. .................... ...........................................................................
-## See problems(...) for more details.
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (11): region, income, happy, finrela, marital, degree, health, wrkstat, ...
+## dbl  (2): age, year
+```
+
+```
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 ```r
@@ -210,12 +176,12 @@ head(gss, 2)
 ```
 
 ```
-## # A tibble: 2 x 13
+## # A tibble: 2 × 13
 ##   region   income  happy    age finrela marital degree  health wrkstat  partyid 
 ##   &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;   
 ## 1 E. NOR.… $10000… NOT T…    54 AVERAGE MARRIED LT HIG… FAIR   WORKING… OTHER P…
 ## 2 E. NOR.… $7000 … VERY …    51 AVERAGE MARRIED LT HIG… GOOD   KEEPING… NOT STR…
-## # … with 3 more variables: polviews &lt;lgl&gt;, sex &lt;chr&gt;, year &lt;dbl&gt;
+## # … with 3 more variables: polviews &lt;chr&gt;, sex &lt;chr&gt;, year &lt;dbl&gt;
 ```
 ]
 

@@ -2,7 +2,7 @@
 title: "QTM 151"
 subtitle: "Week 9 -- forcats <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
-date: "Mar 26"
+date: ""
 output: 
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts]
@@ -71,25 +71,6 @@ Do you have any questions about any of these contents?
 
 Today we are going to talk about **forcats** (package for categorical variables)
 
-]
-
----
-
-# This week
-
-.font130[
-
-We will have a **quiz** posted today after 4:00 PM. Due by **Tuesday** (because of the holidays this week).
-
-We will have a **problem set** posted tomorrow, due by the next lab.
-
-Thank you for your answers to the matching survey. I will match you later today.
-
-Thank you very much for your answers to the midterm evaluations survey. I will send you the overall results in an announcement later tomorrow. 
-
-There are a few changes that I can do to improve the class. Thanks to your answers, I have a clear path to improve things.
-
-Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
 ---
