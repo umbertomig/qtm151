@@ -411,7 +411,7 @@ We can use duration to change dates:
 
 ```
 today() - years(1)
-today() + month(1)
+today() + months(1)
 days(2)
 ddays(2)
 now() + seconds(20)
