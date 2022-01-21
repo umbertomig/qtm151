@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 # QTM 151
-## Week 2 – ggplot2
+## Week 2 – Functions, Loops, and Programming in R
 <html>
 <div style="float:left">
 
@@ -57,31 +57,24 @@ class: center, middle, inverse, title-slide
 
 .font150[
 
-* Did you check the GitHub page?
+Did you check the GitHub page?
 
-* Our GitHub page is: https://github.com/umbertomig/qtm151
+Our GitHub page is: https://github.com/umbertomig/qtm151
 
-* By Tuesday I'll post on Canvas how to connect R with Github.
-
-* The quiz will be posted later today.
-
+Let's check it out?!
 ]
 
 ---
 
 # Today's Agenda
 
-.font150[
+.font130[
 
-* Today we will learn `qplot` graphs.
+`if` statements
 
-* Graphs for Continuous Variables
+`function` creation
 
-* Graphs for Discrete Variables
-
-* Graphs for Two Continuous Variables
-
-* Graphs for Continuous x Discrete Variables
+`for` loops
 
 ]
 
@@ -89,66 +82,18 @@ class: center, middle, inverse, title-slide
 
 class: inverse, center, middle
 
-# qplot
+# Getting Started
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# qplot
-
-.font130[
-* `qplot`, as the names says, stands for quick plots.
-
-* It is great to generate `ggplot` graphs in a hurry.
-
-* And the graphs are indeed `ggplot` objects: you can still add layers to it!
-
-]
-
----
-
-# qplot - Geoms Available
-
-.font130[
-* Which graphs can we generate?
-  - **"point"**:scatterplots.
-  - **"line"**: line plot.
-  - **"histogram"**
-  - **"boxplot"**
-  - **"density"**
-  - **"bar"**: barplot.
-  - **"smooth"**: Fits a smooth line.
-  - **"dotplot"**: dotplot.
-]
-
----
-
-
-# qplot - Options for Customization
-
-.font130[
-* And there are plenty of quick options to customize the graphs.
-  - `data`: Specify the data-frame.
-  - `main`: Title.
-  - `xlab`, `ylab`: x and y axis labels.
-  - `color`: Controls the color of the lines/points.
-  - `fill`: Controls the color of areas (e.g. for histograms).
-  - `size`: Controls the size of points.
-  - `shape`: The shape of points ("circle", "square", "triangle", etc...)
-  - `alpha`: Controls the level of transparency of points/lines/fills.
-  - `lwd`: Line width.
-  - `lty`: Line type ("solid", "dashed", "dotted", etc...).
-  - `facets`: Split up the data into multiple plots.
-]
-
----
-# Loading tidyverse
+# Getting Started: loading packages
 
 .font130[
 
 ```r
-# Load tidyverse
+# Loading tidyverse
 library(tidyverse)
 ```
 
@@ -158,7 +103,7 @@ library(tidyverse)
 
 ```
 ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.3     ✓ dplyr   1.0.7
+## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
 ## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
 ## ✓ readr   2.0.0     ✓ forcats 0.5.1
 ```
@@ -168,7 +113,6 @@ library(tidyverse)
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 ```
-
 ]
 
 ---
@@ -179,7 +123,7 @@ library(tidyverse)
 
 ```r
 # Loading tips dataset
-tips &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv')
+tips &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm150/master/datasets/tips.csv') # or your locale folder
 head(tips, 2)
 ```
 
@@ -191,7 +135,7 @@ head(tips, 2)
 
 ```r
 # Loading PErisk dataset
-PErisk &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv')
+PErisk &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm150/master/datasets/PErisk.csv') # or your locale folder
 head(PErisk, 2)
 ```
 
@@ -200,197 +144,301 @@ head(PErisk, 2)
 ## 1 Argentina      0 -0.7207754       1        3  9.69017
 ## 2 Australia      1 -6.9077550       5        4 10.30484
 ```
+
+```r
+data(USArrests)
+```
+]
+
+---
+class: inverse, center, middle
+
+# if statements
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# if statements
+
+.font130[
+
+**If** statements control the flow of a code.
+
+They create a condition based on some variable and execute a code when the condition is `TRUE`.
+
+Example in pseudo-code:
+
+```
+if (number &gt; 10) {
+  ...execute code for the bigger than 10 case...
+} else {
+  ...execute code for the smaller than or equals 10 case...
+}
+```
+
+]
+
+---
+
+# ifelse
+
+.font130[
+
+In R, we have a function to build if-else statements conveniently.
+
+If-else consists in binary conditions: do something if TRUE, or something else if FALSE.
+
+Syntax: `ifelse(condition, code-if-true, code-if-false)`
+
+For example:
+
+```
+n = 4
+ifelse(n&gt;2, n^2, n/5)
+
+n = 1
+ifelse(n&gt;2, n^2, n/5)
+
+n = 2
+ifelse(n&gt;2, n^2, n/5)
+```
+
+]
+
+---
+
+# ifelse
+
+.font130[
+
+More examples:
+
+```
+## no need to interact with the condition:
+n = 2
+ifelse(n&gt;2, 'bigger than 2', 'smaller than or equal 2')
+
+## gender: vector operation
+gen &lt;- c(0,0,0,1,1,0,1,1,1,0)
+ifelse(gen == 1, 'Fem', 'Masc')
+
+## gender: vector operation
+gen &lt;- c(0,0,2,1,1,2,1,1,1,0)
+ifelse(gen == 1, 'F', ifelse(gen == 0, 'M', 'Non-binary'))
+```
+
+**Your turn**: in the tips dataset, take the variable `day`, and create a condition that shows whether the day is weekday or weekend.
+
+]
+
+---
+
+# "if - else if - else" statements
+
+.font130[
+
+Some statements are more extensive than simple ifelse ones.
+
+Example in pseudo-code:
+
+```
+if (number &gt; 10) {
+  ...execute code for the bigger than 10 case...
+} else if (number &gt; 2 &amp; number &lt;= 10) {
+  ...execute code for this condition...
+} else {
+  ...execute code for otherwise...
+}
+```
+
+]
+
+---
+
+# "if - else if - else" statements
+
+.font130[
+
+Example:
+
+
+```r
+n = 20
+if(n==1) {
+  print('Number equals 1')
+} else if (n==2) {
+  print('Number equals 2')
+} else if (n==3) {
+  print('Number equals 3')
+} else if (n==4) {
+  print('Number equals 4')
+} else if (n&lt;0) {
+  print('Number smaller than zero')
+} else {
+  print('Invalid number!')
+}
+```
+
+```
+## [1] "Invalid number!"
+```
+
 ]
 
 ---
 
 class: inverse, center, middle
 
-# Plots for Continuous Variables
+# functions
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# qplot - Histograms
+# functions
 
 .font130[
 
+Sometimes we need to create our functions.
 
-```r
-qplot(PErisk$gdpw2, geom = "histogram", bins = 10)
+Creating functions is simple. The syntax is straightforward:
+
+```
+name_function &lt;- function(par1, par2, par3, ...) {
+  ...code execute...
+  return(...return smt...)
+}
 ```
 
-&lt;img src="week2_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+Example in pseudo-code:
 
-* **Your turn**: make a histogram of the `tip` variable in the `tips` dataset.
+```
+testn &lt;- function(n) {
+  if (number &gt; 10) {
+    ...execute code for the bigger than 10 case...
+  } else {
+    ...execute code for the smaller than or equals 10 case...
+  }
+  return(...smt...)
+}
+```
 
 ]
 
 ---
 
-# qplot - Density-plots
+
+# functions
 
 .font130[
 
-
-```r
-qplot(PErisk$barb2, geom = "density")
-```
-
-&lt;img src="week2_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
-
-* **Your turn**: make a density plot of the `totbill` variable in the `tips` dataset.
-
-]
-
----
-
-
-# qplot - Box-plots
-
-.font130[
+Example: BMI index function
 
 
 ```r
-# Box-plot of log of per capita gdp
-qplot(y = PErisk$gdpw2, geom = "boxplot")
+bmi &lt;- function(w, h) {
+  bmi = w / (h^2)
+  return(bmi)
+}
+# BMI person 70 kg and 1.75 m
+bmi(70, 1.75)
 ```
 
-&lt;img src="week2_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+```
+## [1] 22.85714
+```
 
-* **Your turn**: make a boxplot of the `totbill` variable in the `tips` dataset.
-
+**Your turn** create a function that receives weight in pounds and heights in inches and returns the BMI.
 ]
 
 ---
 
 class: inverse, center, middle
 
-# Plot for Discrete Variables
+# loops
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# qplot - Bar-Plots
+# loops
 
 .font130[
 
+There are two ways of creating loops: `while` and `for`.
 
-```r
-# Bar-plot of courts
-qplot(factor(PErisk$courts), geom = "bar")
+While loops are useful to run a piece of code until a condition is satisfied. 
+
+For example:
+
+```
+i = 1
+while(i &lt; 50) {
+  print(i)
+  print('i is smaller than 50!')
+  print(i^10)
+  i = i+1
+}
 ```
 
-&lt;img src="week2_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+]
 
-* **Your turn**: make a bar-plot of the `smoker` variable in the `tips` dataset.
+
+---
+
+# loops
+
+.font130[
+
+Example: infinite loop:
+
+```
+while(TRUE) {
+  x = readline("Type something or break: ")
+  if(x == 'break'){
+    break
+  }
+  cat("You typed: ", x)
+}
+```
 
 ]
 
 ---
 
-class: inverse, center, middle
-
-# Plot for two Continuous Variables
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# qplot - Scatter-Plot
+# loops
 
 .font130[
 
+The `for` loop is a bit different: it receives a counter and runs until it is exhausted.
 
-```r
-qplot(PErisk$gdpw2, PErisk$barb2, 
-      geom = "point") 
+Example:
+
 ```
-
-&lt;img src="week2_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
-
-* **Your turn**: make a Scatter-Plot for the `totbill` and the `tips` variables in the `tips` dataset.
+for (i in 1:10) {
+  print(i)
+  print(i^5)
+}
+```
 
 ]
 
 ---
 
-# qplot - Scatter-Plot (with smooth)
+# loops
 
 .font130[
 
-
-```r
-qplot(PErisk$gdpw2, PErisk$barb2, geom = "point") +
-  geom_rug() + geom_smooth()
-```
+Example: let's run over the columns of a dataset and display the class of each variable:
 
 ```
-## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+for (i in names(tips)) {
+  print(class(tips[,i]))
+}
 ```
 
-&lt;img src="week2_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
-
-* **Your turn**: make a Scatter-Plot with smooth line for the `totbill` and the `tips` variables in the `tips` dataset.
-
-]
-
----
-
-# qplot - Scatter-Plot (segmented)
-
-.font130[
-
-
-```r
-qplot(PErisk$gdpw2, PErisk$barb2, geom = "point", color = factor(PErisk$courts))
-```
-
-&lt;img src="week2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
-
-* **Your turn**: make a segmented scatter-plot with smooth line for the `totbill` and the `tips`, by `smoker`.
-]
-
----
-# qplot - Scatter-Plot (faceted)
-
-.font130[
-
-
-```r
-qplot(gdpw2, barb2, geom = "point", facets = . ~ courts, data = PErisk)
-```
-
-&lt;img src="week2_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
-
-* **Your turn**: make a faceted scatter-plot for the `totbill` and the `tips`, faceting by `smoker`.
-]
-
----
-
-class: inverse, center, middle
-
-# Plot for Continuous x Discrete Variables
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# qplot - Multiple Box-Plots
-
-.font130[
-
-
-```r
-qplot(x = factor(PErisk$courts), y = PErisk$gdpw2, 
-      geom = "boxplot")
-```
-
-&lt;img src="week2_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
-
-* **Your turn**: make a box-plot of the `tips` variable by `smoker` in the `tips` dataset.
+**Your turn**: Create a function that displays the summary of the numeric or integer variables and a table of the other variables.
 
 ]
 
@@ -400,8 +448,7 @@ class: inverse, center, middle
 
 # Questions?
 
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt;
 
 ---
 
