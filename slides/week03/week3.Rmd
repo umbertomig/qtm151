@@ -1,6 +1,6 @@
 ---
 title: "QTM 151"
-subtitle: "Week 6 -- dplyr (join datasets) <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+subtitle: "Week 3 -- dplyr (join datasets) <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
 date: ""
 output: 
@@ -58,14 +58,11 @@ options(repos = r)
 .font130[
 
 We learned:
- + `qplot`: quick way to make ggplot graphs.
- + `ggplotly`: transform ggplot objects into nice plotly viz.
- + `plot_ly`: create nice plotly graphs.
- + `dplyr` methods: data wrangling
+ + Conditional Statements
+ + Functions
+ + Loops
 
 Do you have any questions about any of these contents?
-
-The quiz is online!
 
 Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
@@ -76,15 +73,15 @@ Our GitHub page is: https://github.com/umbertomig/qtm151
 
 .font130[
 
-`dplyr` is great for the following data manipulation: 
+`dplyr` is excellent for the following data manipulation: 
 + filter
 + arrange
 + select
 + rename
 + mutate
-+ summarise and group_by
++ summarize and group_by
 
-* **dplyr is also great to merge datasets together**
+* **dplyr is also great to merge datasets**
 ]
 
 ---
@@ -201,7 +198,7 @@ class: inverse, center, middle
 .font130[
 *left_join(x, y, by="key variable")*: join the datasets, keeping all the observations (rows) in x
 
-* A key is a variable that uniquely identifies an observation, otherwise, we need multiple variables to identify an observation.
+* A key is a variable that uniquely identifies an observation. Otherwise, we need multiple variables to identify the observation.
 
 ![](leftjoin.png)
 ]
@@ -275,7 +272,7 @@ class: inverse, center, middle
 
 *inner_join()* keeps all the observations in **both** x and y
 
-An inner join keeps observations that appear in both tables. But unmatched rows are not included in the result, it is easy to lose observations. 
+An inner join keeps observations that appear in both tables. But unmatched rows are not included in the result; it is easy to lose observations. 
 
 ]
 
@@ -311,7 +308,7 @@ class: inverse, center, middle
 
 *full_join* keeps all observations in x and y
 
-An full_join keeps observations that appear in either x or y.
+A `full_join` keeps observations that appear in either x or y.
 
 ![](fulljoin.png)
 
@@ -328,7 +325,7 @@ Example:
 full_join(band, instrument, by="name")
 ```
 
-**Your turn:** Join the datasets `dat1` and `dat2` using full_join Describe what happened.
+**Your turn:** Join the datasets `dat1` and `dat2` using `full_join`. Describe what happened.
 
 ]
 
@@ -387,7 +384,7 @@ class: inverse, center, middle
 
 *anti_join(x,y, by="")* drops all the observations of x that have a match in y.
 
-*anti_join()* also provide a great way to diagnose joins that go wrong.
+*anti_join()* also provides a great way to diagnose joins that go wrong.
 
 ![](anti.png)
 
