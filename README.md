@@ -2,8 +2,12 @@
 
 This is the QTM 151 GitHub repository. I organized the folders in the following way:
 
-1. Slides: R Markdown and PDFs.
-2. Data: Datasets used for this class (feel free to suggest other datasets!)
-3. RScripts: scripts that we write during class.
+1. **datasets**: Class datasets.
+2. **figures**: A few plotly figures used in the plot_ly quiz.
+3. **homeworks**: RMD of the class homeworks.
+4. **midterm**: RMD of the midterm.
+5. **rscripts**: A few class scripts that I developed with students in class.
+6. **slides**: Weekly slides for the course.
+7. **summer**: Weekly slides for the summer version of the course.
 
 #Emory! Cor prudentis possidebit scientiam.
