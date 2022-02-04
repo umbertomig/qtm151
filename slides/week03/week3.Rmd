@@ -1,6 +1,6 @@
 ---
 title: "QTM 151"
-subtitle: "Week 3 -- plotly <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+subtitle: "Week 6 -- dplyr (join datasets) <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
 date: ""
 output: 
@@ -11,6 +11,7 @@ output:
       beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
       highlightStyle: github
       ratio: 4:3
+      self-contained: false
       highlightLines: true
       countIncrementalSlides: false
       slideNumberFormat: |
@@ -56,65 +57,43 @@ options(repos = r)
 
 .font130[
 
-* Last week we learned `qplot`. It is a great function simple dataviz.
+We learned:
+ + `qplot`: quick way to make ggplot graphs.
+ + `ggplotly`: transform ggplot objects into nice plotly viz.
+ + `plot_ly`: create nice plotly graphs.
+ + `dplyr` methods: data wrangling
 
-* Do you have any questions about `qplot`?
+Do you have any questions about any of these contents?
 
-* I also learned that some of you have difficulty to download data from GitHub. I posted a video to help with this.
+The quiz is online!
 
-* The quiz is already posted, and I'll post the 
-
-* Our GitHub page is: https://github.com/umbertomig/qtm151
+Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
 ---
 
-# Today's Agenda
+# dplyr Recap and Today's Agenda
 
-.font150[
+.font130[
 
-* Plotly
+`dplyr` is great for the following data manipulation: 
++ filter
++ arrange
++ select
++ rename
++ mutate
++ summarise and group_by
 
-* Creating `plotly` from ggplot graphs
-
-* Using the `plotly` interactive device 
-
+* **dplyr is also great to merge datasets together**
 ]
 
 ---
 
 class: inverse, center, middle
 
-# plotly
+# Getting Started
 
 <html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
-
----
-
-# plotly
-
-.font150[
-* `plotly` is an R package for creating interactive web-based graphs.
-
-* It is based on `plotly.js`, a javascript to plot interactive graphs in R and Python.
-
-* They are great for presentations and for displaying data for a non-stats crowd.
-
-]
-
----
-
-# plotly
-
-.font150[
-
-* There are two functions that you can use to create a plotly:
-  + The `plot_ly()` function, that transforms data into a `plotly` object.
-  + The `ggplotly()` function, that transforms a ggplot object into a `plotly` object.
-  
-* Regardless of how a `plotly` object is created, printing it results in an interactive web-based visualization enabled by default. 
-
-]
 
 ---
 
@@ -124,297 +103,310 @@ class: inverse, center, middle
 ```{r}
 # Loading tidyverse
 library(tidyverse)
-
-# Loading plotly
-library(plotly)
 ```
 ]
 
 ---
 
-# Loading datasets
+# Loading data
 
 .font130[
 ```{r, tidy=FALSE}
-# Loading tips dataset
-tips <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv')
-head(tips, 2)
+band <- tribble(
+   ~name,     ~band,
+  "Mick",  "Stones",
+  "John", "Beatles",
+  "Paul", "Beatles")
 
+instrument <- tribble(
+    ~name,   ~plays,
+   "John", "guitar",
+   "Paul",   "bass",
+  "Keith", "guitar")
+
+instrument2 <- tribble(
+    ~artist,   ~plays,
+   "John", "guitar",
+   "Paul",   "bass",
+  "Keith", "guitar")
+```
+]
+
+---
+
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
 # Loading PErisk dataset
-PErisk <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv')
+PErisk <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
 head(PErisk, 2)
 
-# Load gapminder
-library(gapminder)
-head(gapminder, 2)
+# First dataset
+dat1 <- PErisk %>% 
+  filter(country %in% PErisk$country[1:5]) %>%
+  select(country, courts:prsexp2)
+dat1
+
+# Second dataset
+dat2 <- PErisk %>% 
+  filter(country %in% PErisk$country[2:6]) %>%
+  select(country, prscorr2, gdpw2)
+dat2
 ```
 ]
 
 ---
 
-# Loading datasets
+class: inverse, center, middle
+
+# Join Datasets
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+
+---
+
+# Join Datasets
 
 .font130[
-```{r, tidy=FALSE}
-# Load gapminder
-library(gapminder)
-head(gapminder, 2)
-```
-]
+Join two or more datasets together is a common problem in data wrangling.
 
----
+Lucky us, `dplyr` makes the job easy. Here are the functions we can use:
 
-# ggplot
+|  Function  |                     Description                     |
+|:----------:|:---------------------------------------------------:|
+| inner_join | Keep data in both datasets                          |
+| left_join  | Keep all data in the left dataset                   |
+| right_join | Keep all data in the right dataset                  |
+| full_join  | Keep all data in both datasets                      |
+| semi_join  | Keep cases in the first that are also in the second |
+| anti_join  | Keep cases in the first that are NOT in the second  |
 
-```{r, fig.align='center', fig.height=5, fig.width=5}
-p <- ggplot(PErisk, aes(x=barb2, y=gdpw2)) + 
-  geom_point() +
-  geom_smooth(method="lm", se=F)
-
-p
-```
-
----
-
-# plotly
-
-```{r, fig.align='center', message = FALSE}
-ggplotly(p)
-```
-
----
-
-# ggplotly
-
-.font150[
-* **Your turn:** Create a `ggplotly` with `totbill` and `tip`.
-
-* We can do even better: create a plotly with colors by factor.
 
 ]
 
 ---
 
-# ggplot
+class: inverse, center, middle
 
-```{r, fig.align='center', fig.height=5, fig.width=5}
-p <- ggplot(PErisk, aes(x=barb2, y=gdpw2)) + 
-  geom_point(aes(col = factor(courts))) +
-  geom_smooth(aes(col = factor(courts)), method="lm", se=F)
-p
-```
+# left_join
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-# plotly
+# left_join
 
-```{r, fig.align='center', message = FALSE, echo = FALSE, warning=FALSE}
-ggplotly(p)
-```
+.font130[
+*left_join(x, y, by="key variable")*: join the datasets, keeping all the observations (rows) in x
+
+* A key is a variable that uniquely identifies an observation, otherwise, we need multiple variables to identify an observation.
+
+![](leftjoin.png)
+]
 
 ---
 
-# Intro to Animations in ggplot2
+# left_join
+
+.font130[
+Example:
+
+```{r}
+dat<-left_join(band, instrument, by="name")
+dat
+```
+
+**Your turn:** Join the datasets `dat1` and `dat2` using left_join. Describe what happened.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# right_join
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# right_join
 
 .font130[
 
-* Animations can be created by using the *frame* argument aesthetic in ggplotly().
+*right_join(x, y, by="")*: keep all the observations (rows) in y
 
-* By default, animations populate a play button and slider component for controlling the state of the animation (to pause an animation, click on a relevant location on the slider bar).
+* The opposite way of *left_join()*
 
-* [One example](https://www.youtube.com/watch?v=hVimVzgtD6w)
+![](rightjoin.png)
+]
+
+---
+
+# right_join
+
+.font130[
+Example:
+
+```{r}
+dat<-right_join(band,instrument, by="name")
+dat
+```
+
+**Your turn:** Join the datasets `dat1` and `dat2` using right_join. Describe what happened.
 
 ]
 
 ---
 
-# plotly
+class: inverse, center, middle
 
-```{r, fig.align='center', message = FALSE, echo = FALSE}
-p <- ggplot(gapminder, aes(x=gdpPercap, y=lifeExp, 
-                           color = continent)) +
-  geom_point(aes(size = pop, 
-                 frame = year, ids=country)) +
-  scale_x_log10()
+# inner_join
 
-ggplotly(p)
-```
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
 ---
 
-# ggplotly
+# inner_join
 
-.font150[
-* **Your turn:** Create a plotly with `totbill` and `tip`, varying by day and time.
+.font130[
 
-* And you can keep adding animation options:
-  + transition: the duration of the smooth transition between frame (in milliseconds)
-  + easing: the type of transition easing
-  + mode: describes how a new animate call interacts with currently-running animations.
+*inner_join()* keeps all the observations in **both** x and y
+
+An inner join keeps observations that appear in both tables. But unmatched rows are not included in the result, it is easy to lose observations. 
+
 ]
 
 ---
 
+# inner_join
 
-# ggplotly: more animation options
+.font130[
+Example:
 
-```{r, echo = FALSE, warning=FALSE}
-ggplotly(p) %>%
-  animation_opts(transition = 500, 
-                 easing = "linear", 
-                 mode = "immediate")
+```{r}
+inner_join(band, instrument, by="name")
 ```
 
----
-
-# ggplotly: more animation options
-
-```{r, echo = FALSE, warning=FALSE}
-ggplotly(p) %>% 
-  animation_opts(
-    1000, easing = "elastic", redraw = FALSE
-  ) %>% 
-  animation_button(
-    x = 1, xanchor = "right", y = 0, yanchor = "bottom"
-  ) %>%
-  animation_slider(
-    currentvalue = list(prefix = "YEAR ", font = list(color="red"))
-  )
-```
-
----
-
-# ggplotly
-
-.font150[
-* **Your turn:** Make some animation options in your previous plot: `totbill` x `tip`, varying by day and time.
-]
-
----
-
-# plot_ly
-
-.font150[
-* The *plot_ly()* function provides a direct interface to plotly.js, so anything in the [figure reference](https://plot.ly/r/reference/) can be specified via *plot_ly()*.
-
-* A plotly visualization is composed of one (or more) trace(s), and every trace has a *type* (the default trace type is "scatter") can be used to draw a large amount of geometries along with the *add_XX()* functions.
-
-* The *plot_ly()* function has a number of arguments that make it easier to scale data values to visual aesthetics (e.g., *color/colors, symbol/symbols, linetype/linetypes, size/sizes*). 
-
-* Template:
-```
-plot_ly(data, x, y, symbol, size,  type, mode, color)
-```
+**Your turn:** Join the datasets `dat1` and `dat2` using inner_join. Describe what happened.
 
 ]
 
 ---
 
 
-# plot_ly
+class: inverse, center, middle
 
-```
-p<-plot_ly(tips, x=~tip, type="histogram")
+# full_join
 
-p1<-plot_ly(tips, x=~tip) %>% add_histogram(name="tip")
-p2<-plot_ly(tips, x=~totbill) %>% add_histogram(name="totalbill")
-
-subplot(p1,p2) %>% hide_legend()
-```
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
+# full_join
 
-# plot_ly
+.font130[
 
-```{r, echo = FALSE, warning=FALSE}
-p<-plot_ly(PErisk, x=~gdpw2, type="histogram")
-p
-```
+*full_join* keeps all observations in x and y
 
----
+An full_join keeps observations that appear in either x or y.
 
-# plot_ly
+![](fulljoin.png)
 
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x=~gdpw2) %>% 
-  add_histogram(name="GDP Per Capita")
-```
-
----
-
-
-# plot_ly
-
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x=~barb2) %>%
-  add_histogram(name="Informal Markers Gains")
-```
-
----
-
-
-# plot_ly
-
-```{r, echo = FALSE, warning=FALSE}
-p1<-plot_ly(PErisk, x=~gdpw2) %>% add_histogram(name="GDP Per Capita")
-p2<-plot_ly(PErisk, x=~barb2) %>% add_histogram(name="Informal Markers Gains")
-subplot(p1,p2) %>% hide_legend()
-```
-
----
-
-# plot_ly
-
-.font150[
-* **Your Turn**: do the same plots for `tip` and `totbill`.
-
-* We can also do boxplots.
 ]
 
 ---
 
-# plot_ly: boxplot
+# full_join
 
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x = ~courts, y=~barb2, type = "box")
-```
----
-# plot_ly: boxplot
+.font130[
+Example:
 
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x = ~prsexp2, y=~gdpw2) %>% add_boxplot()
+```{r}
+full_join(band, instrument, by="name")
 ```
 
----
+**Your turn:** Join the datasets `dat1` and `dat2` using full_join Describe what happened.
 
-# plot_ly: boxplot
-
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x=~prsexp2, y=~gdpw2, type="box",
-        boxpoints="all", pointpos=1,
-        marker=list(color="green"))  %>%
-  layout(title = "Boxplot GDP by Expropriation Risk")
-```
+]
 
 ---
 
 
-# plot_ly: scatterplots
+class: inverse, center, middle
 
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x=~barb2, y=~gdpw2, 
-        type="scatter", mode="markers") 
-```
+# semi_join
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-# plot_ly: scatterplots
+# semi_join
 
-```{r, echo = FALSE, warning=FALSE}
-plot_ly(PErisk, x=~barb2, y=~gdpw2, 
-        type="scatter", mode="markers") %>%
-  add_markers(symbol= ~prsexp2) 
+.font130[
+
+*semi_join(x,y, by="")* keeps all the observations of x that have a match in y
+
+Use semi_join() to collect the artists in *band* that have instrument info in *instrument*.
+
+![](semi.png)
+
+]
+
+---
+
+# semi_join
+
+.font130[
+Example:
+
+```{r}
+semi_join(band, instrument, by="name")
 ```
+
+**Your turn:** Join the datasets `dat1` and `dat2` using semi_join. Describe what happened.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# anti_join
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# anti_join
+
+.font130[
+
+*anti_join(x,y, by="")* drops all the observations of x that have a match in y.
+
+*anti_join()* also provide a great way to diagnose joins that go wrong.
+
+![](anti.png)
+
+]
+
+---
+
+# anti_join
+
+.font130[
+Example:
+
+```{r}
+anti_join(band, instrument, by="name")
+```
+
+**Your turn:** Join the datasets `dat1` and `dat2` using anti_join. Describe what happened.
+
+]
 
 ---
 
