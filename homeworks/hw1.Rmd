@@ -6,53 +6,130 @@ output: html_document
 
 ## Instructions:
 
-**Due:** 02/15 at 11:59PM.
+**Due:** 02/23 at 11:59PM.
 
 **What am I expecting?** An R Markdown and the compiled HTML with the answers.
 
 **Have fun!**
 
+```{r}
+# Warming up
+library(tidyverse)
+```
+
 ## Homework 1
 
-Use `qplot()` function to create plots about `diamonds`. The data set diamonds is built in the package
-`ggplot2`.
+Before `dplyr`, it was challenging to join two different datasets in R. We used to write functions to do this. In this homework, you will write a function to implement a version of `inner_join`.
 
-To get started:
+Primitives:
 
-```{r}
-library(tidyverse)
-data(diamonds)
-```
+I am giving you two datasets: the first is the `dat1`, which is the left-dataset. The second is `dat2`, which is right-dataset.
 
-**1**. Make a small random subset of diamonds and name it as `dsmall`.
+**1.** Load the `dat1.csv` and the `dat2.csv` from the class [GitHub page](https://github.com/umbertomig/qtm151). Use the function `read.csv` (not `read_csv`!).
 
 ```{r}
-# your answers here
+# Your answers here
 ```
 
-**2**. Show the distribution of carat with a histogram, set binwidth to 0.1 and limits for the x-axis from 0
-to 3.
+The datasets have information about airports. The first dataset (`dat1`), has info about names, time zones, etc. The second dataset (`dat2`) has info about the airports' latitudes, longitudes, and altitudes. We want to merge this information.
+
+**2**. Using the `dplyr` function `inner_join`, join both datasets. Check the results using the function `summary`. After joining the datasets, how much missing data is there in the latitude variable?
 
 ```{r}
 # your answers here
 ```
 
-**3**. Show the distribution of carat with a *density plot*, set the color to the variable `color`.
+**3**. Display all the cases, for each variable, in sequence. Example: if the dataset looks like this:
+
+```
+> dat3
+  faa      lat       lon  alt
+1 04G 41.13047 -80.61958 1044
+2 06A 32.46057 -85.68003  264
+3 06C 41.98934 -88.10124  801
+```
+
+The function should display:
+
+```
+04G41.13047-80.61958104406A32.46057-85.6800326406C41.98934-88.10124801
+```
+
+```{r}
+# Your answers here
+```
+
+
+Hint 1: use double `for`, sweeping first the rows and then the columns. Then use `cat`.
+
+Hint 2: To build `dat3`, run `dat3 <- dat2[1:3,]`.
+
+**4**. The common variable in both datasets is `faa`, which is the Federal Aviation Administration code for the airport. Extract this variable, and use a `for` loop to print each value. Use `print` to print the data row by row.
 
 ```{r}
 # your answers here
 ```
 
-**4**. Produce a scatter-plot showing the relationship between *carat* and *price*, set point shape to the
-variable cut, set point transparency to 0.1, and describe the trend of the scatter-plot.
+Hint: Since you will need to do this for any variable specified by the user, extract the vector by using `data_frame[,'variable']` pattern.
+
+**5**. Using the function `subset`, extract the lines in the left that match with the third value of `dat1[,'faa']` in both datasets.
 
 ```{r}
 # your answers here
 ```
 
-**5**. Make another scatter-plot between *carat* and *price*, add jitters to points, set point transparency to
-0.1, apply log transformation to the x and y axes variables, and add a smooth line to the plot, then
-describe the trend of the scatter-plot.
+Hint 1: Run `dat1[3,'faa']` to find which airport is this one.
+
+Hint 2: If you are unsure about the function `subset`, run `help(subset)`.
+
+Hint 3: If you feel more comfortable, you may use the function `filter`.
+
+**6**. Using a for-loop on the content of the `faa` variable, extract and print (with `print`) the first five lines of `dat1`.
+
+```{r}
+# Your answers here
+```
+
+**7**. Extract the row associated with `faa = 06A` in `dat1` and `dat2`. Join the two rows horizontally (binding the columns) by using the command `cbind`. Then, note that it joins `faa` twice. Remove one of the entries.
+
+```{r}
+# Your answers here
+```
+
+Hint 1: You can remove `faa` on the second dataset by selecting all the variables but `faa`. One way to do that is to use `setdiff(names(dat2), 'faa')`.
+
+Hint 2: This is the result in my computer:
+
+```
+  faa                          name tz dst
+2 06A Moton Field Municipal Airport -6   A
+            tzone      lat       lon alt
+2 America/Chicago 32.46057 -85.68003 264
+```
+
+**8**. Extract the row associated with `faa = 04G` and the row associated with `faa = 06A` from `dat1` and `dat2`. Join the rows for each `faa` code horizontally, and then join both results vertically. Make sure that the `faa` variable shows up only once.
+
+```{r}
+# Your answers here
+```
+
+Hint: Use either `rbind` (my favorite) or `bind_rows` to bind two rows in the dataset.
+
+**9**. Using for-loops, automate the process for all the `faa` codes. Save the result in a blank dataset `aux`.
+
+```{r}
+# Your answers here
+```
+
+Hint: Start with a blank dataset. To create one, do `aux <- data.frame()`.
+
+**10**. Build a function `my_join`, that receives a left-dataset, a right-dataset, and a `by = 'variable_name'` to index the matches.
+
+```{r}
+# Your answers here
+```
+
+Which function is faster: `inner_join` or your own `my_join`? Compare using the question in [here](https://stackoverflow.com/questions/6262203/measuring-function-execution-time-in-r).
 
 ```{r}
 # your answers here
