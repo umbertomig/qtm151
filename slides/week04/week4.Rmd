@@ -1,6 +1,6 @@
 ---
 title: "QTM 151"
-subtitle: "Week 4 -- plotly (cont'd) <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
+subtitle: "Week 4 -- tidyr <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
 date: ""
 output: 
@@ -11,6 +11,7 @@ output:
       beforeInit: "https://raw.githubusercontent.com/umbertomig/qtm151/main/slides/wmisc/macros.js"
       highlightStyle: github
       ratio: 4:3
+      self-contained: false
       highlightLines: true
       countIncrementalSlides: false
       slideNumberFormat: |
@@ -56,28 +57,13 @@ options(repos = r)
 
 .font130[
 
-* We learned:
- + `qplot`: quick way to make ggplot graphs.
- + `ggplotly`: transform ggplot objects into nice plotly viz.
+We learned:
+ + Programming: `for`, `while`, conditional statements
+ + `dplyr *_join` methods: joining data
 
-* Do you have any questions about `qplot`? What about `ggplotly`?
+Do you have any questions about any of these contents?
 
-* The quiz is posted. Good luck!
-
-* Our GitHub page is: https://github.com/umbertomig/qtm151
-]
-
----
-
-# Today's Agenda
-
-.font150[
-
-* `plot_ly` today:
-  - Scatter-plots
-  - Line-plots
-  - Bar-plots
-
+Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
 ---
@@ -96,332 +82,367 @@ class: inverse, center, middle
 ```{r}
 # Loading tidyverse
 library(tidyverse)
-
-# Loading plotly
-library(plotly)
-
-# Load gapminder
-library(gapminder)
 ```
 ]
 
 ---
 
-# Loading datasets
+# Loading data
 
 .font130[
 ```{r, tidy=FALSE}
-# Loading tips dataset
-tips <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv') # or your locale folder
-head(tips, 2)
+# population table
+table1<-tibble(
+  `country`=c("Afghanistan","Brazil","China"),
+  `1999`=c(19987071, 172006362, 1272915272),
+  `2000`=c(20595360, 174504898, 1280428583)
+)
+table1
 
-# Loading PErisk dataset
-PErisk <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
-head(PErisk, 2)
+# case table
+table2<-tibble(
+  `country` = c("Afghanistan","Brazil","China"),
+  `1999` = c(745, 37737, 212258),
+  `2000` = c(2666, 80488, 213766)
+)
+table2
 ```
 ]
 
 ---
 
-# Loading datasets
+# Loading data
 
+.font130[
 ```{r, tidy=FALSE}
-# Gapminder
-head(gapminder, 2)
+table3<- tibble(
+  `country` = c("Afghanistan", "Afghanistan", "Afghanistan", "Afghanistan", "Brazil", "Brazil", "Brazil", "Brazil","China", "China","China", "China"),
+   `year` = c(1999,1999,2000,2000,1999,1999,2000,2000,1999,1999,2000,2000),
+   `type` = c("case", "population","case", "population","case", "population","case", "population","case", "population","case", "population"),
+   `count` = c(745, 19987071, 2666, 20595360, 37737, 172006362, 80488, 174504898, 212258, 1272915272, 213766, 1280428583)
+)
+table3
 ```
-
----
-class: inverse, center, middle
-
-# plot_ly: scatter-plots
-
-<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+]
 
 ---
 
-# `plot_ly` Scatter-plots
+# Loading data
 
 .font130[
-
-* It is very simple to build a plotly scatter-plot.
-
-* The most basic syntax is the following:
+```{r, tidy=FALSE}
+table4<-tibble(
+    `country` = c("Afghanistan", "Afghanistan", "Brazil", "Brazil","China", "China"),
+     `year` = c(1999,2000,1999,2000,1999,2000),
+    `rate`= c("745/19987071", "2666/20595360", "37737/172006362", "80488/174504898", "212258/1272915272", "213766/1280428583")
+)
+table4
 ```
-  plot_ly(data = data_set_here, 
-    x = ~x_axis_here, 
-    y = ~y_axis_here,
-    type = 'scatter')
-```
-
-- Let's try?!
-
 ]
 
 ---
 
-# plotly
-
-```
-head(PErisk)
-plot_ly(data = PErisk, 
-  x = ~barb2, 
-  y = ~gdpw2)
-```
-
----
-
-# plot_ly Scatter-plots styling
+# Loading data
 
 .font130[
-* We can change the style of our plot_ly. For example: we can change the dots and add text to markers:
-]
+```{r, tidy=FALSE}
+# population table
+tbl1<-tibble(
+  `county`=c("DeKalb","Fulton","Cobb"),
+  `2010`=c(691961, 920581, 690688),
+  `2011`=c(693961, 921581, 691688)
+)
+tbl1
 
+# veterans table
+tbl2<-tibble(
+  `county` = c("DeKalb","Fulton","Cobb"),
+  `2010` = c(36189, 42448, 41345),
+  `2011` = c(36389, 42648, 41545)
+)
+tbl2
 ```
-plot_ly(data = PErisk, x = ~barb2, y = ~gdpw2,
-        text = ~paste("Country: ", country), # Hover text
-        type = 'scatter',
-        marker = list(size = 10, # Markers characteristics
-                      color = 'red',
-                      line = list(color = 'black',
-                                  width = 2))) %>%
-  layout(title = 'Informal Markets and GDP', # Layout
-         yaxis = list(zeroline = FALSE),
-         xaxis = list(zeroline = FALSE))
-```
+]
 
 ---
 
-# `plot_ly` Scatter-plots qualitative coloring
-
-.font150[
-* We can also color our scatter-plot by a qualitative variable:
-]
-
-```
-PErisk$courts2 <- factor(PErisk$courts, labels = c('Not Independent','Independent'))
-plot_ly(data = PErisk, x = ~barb2, y = ~gdpw2,
-        text = ~paste("Country: ", country), # Hover text
-        color = ~courts2, colors = c('blue', 'red'),
-        type = 'scatter', mode = 'markers',
-        marker = list(size = 10)) %>%
-  layout(title = 'Informal Markets and GDP', # Layout
-         yaxis = list(zeroline = FALSE),
-         xaxis = list(zeroline = FALSE))
-```
----
-
-# `plot_ly` 3D-Scatter-plots
+# Loading data
 
 .font130[
-* It is also easy to build 3D scatterplots.
-
-* Here we plot infant mortality and GDP in the US by year.
-
-* Warning: the plot is very awkward.
+```{r, tidy=FALSE}
+tbl3<- tibble(
+  `country` = c("DeKalb", "DeKalb", "DeKalb", "DeKalb", "Fulton", "Fulton", "Fulton", "Fulton","Cobb", "Cobb","Cobb", "Cobb"),
+   `year` = c(2010,2010,2011,2011,2010,2010,2011,2011,2010,2010,2011,2011),
+   `type` = c("veterans", "population","veterans", "population","veterans", "population","veterans", "population","veterans", "population","veterans", "population"),
+   `count` = c(36189, 691961, 36389, 693961, 42448, 920581, 42648, 921581, 41345, 690688, 41545, 691688)
+)
+tbl3
+```
 ]
 
-```
-gmd <- filter(gapminder, country == 'United States')
-plot_ly(data = gmd, x = ~year, y = ~gdpPercap, z = ~lifeExp,
-        color = ~year,
-        type = 'scatter3d', mode = 'markers',
-        marker = list(size = 10)) %>%
-  layout(title = 'U.S. GDP and Life Expectancy by Year', # Layout
-         yaxis = list(zeroline = FALSE),
-         xaxis = list(zeroline = FALSE))
-```
 ---
 
-# `plot_ly` Scatter-plots
 
-.font150[
-* **Your turn:** Create a `plot_ly` with `totbill` and `tip`. Then, change the title, remove the x and y zerolines, and display the weekday (`day`) in the text. Color by `time`.
+# Loading data
+
+.font130[
+```{r, tidy=FALSE}
+tbl4<- tibble(
+  `country` = c("DeKalb", "DeKalb", "Fulton", "Fulton", "Cobb", "Cobb"),
+   `year` = c(2010,2011,2010,2011,2010,2011),
+   `prop` = c("36189/691961", "36389/693961", "42448/920581", "42648/921581", "41345/690688", "41545/691688")
+)
+tbl4
+
+stocks1 <-tibble(
+  year = rep(c(2015,2016), each=4),
+  qtr = rep(c(1,2,3,4), 2),
+  return = c(1.88, 0.59, 0.35, NA, NA, 0.92,0.17, 2.66)
+) %>% na.omit()
+```
 ]
 
 ---
 
 class: inverse, center, middle
 
-# plot_ly: line-plots
+# tidyr
 
 <html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-# `plot_ly` Line Plots
+# tidyr
 
 .font130[
+The *tidyr* package helps tidy up messy datasets. There are three interrelated rules which make a dataset tidy:
 
-* Line plots are very useful for time series, such as stock prices.
+1. Each variable must have its own column
 
-* The most basic syntax is the following:
-```
-  plot_ly(data = data_set_here, 
-    x = ~x_axis_here, 
-    y = ~y_axis_here, 
-    type = 'scatter', 
-    mode = 'lines')
-```
+2. Each observation must have its own row
 
-- Let's try?!
+3. Each value must have its own cell
 
+There are a few key functions in the *tidyr* package, *gather()*, *spread()*, *separate()*, *unite()*, *complete()*, *fill()*.
 ]
 
----
-
-# plot_ly: line-plots
-
-```
-gmd <- filter(gapminder, country == 'United States')
-plot_ly(data = gmd, x = ~year, y = ~gdpPercap,
-    type = 'scatter', 
-    mode = 'lines') %>%
-  layout(title = 'U.S. GDP per capita over time', # Layout
-         yaxis = list(title = 'GDP Per Capita'),
-         xaxis = list(title = 'Year'))
-```
-
----
-
-# plot_ly: line-plots
-
-.font130[
-* We can add markers to the lines:
-]
-
-```
-plot_ly(data = gmd, x = ~year, y = ~gdpPercap,
-    type = 'scatter', 
-    mode = 'lines+markers') %>%
-  layout(title = 'U.S. GDP per capita over time', # Layout
-         yaxis = list(title = 'GDP Per Capita'),
-         xaxis = list(title = 'Year'))
-```
-
----
-
-# plot_ly: line-plots with multiple lines
-
-.font130[
-* We can also add different countries:
-]
-
-```
-gmd <- filter(gapminder, country %in% c('United States', 'Canada'))
-plot_ly(data = gmd, x = ~year, y = ~gdpPercap,
-  type = 'scatter', linetype = ~country,
-  mode = 'lines+markers') %>%
-  layout(title = 'U.S. and Canada GDP per capita over time',
-         yaxis = list(title = 'GDP Per Capita'),
-         xaxis = list(title = 'Year'))
-```
-
----
-
-# plot_ly: line-plots with multiple lines
-
-.font130[
-* We can also plot all countries in the same chart.
-]
-
-```
-plot_ly(data = gapminder, x = ~year, y = ~log(gdpPercap)) %>%
-  add_lines(color =~country) %>%
-  hide_legend()
-```
----
-
-# plot_ly: line-plots with multiple lines
-
-.font130[
-* And change the color of a desired country.
-]
-
-```
-gapminder %>%
-  group_by(country) %>%
-  plot_ly(x = ~year, y = ~log(gdpPercap)) %>%
-  add_lines(text = 'All Countries', alpha=I(0.2)) %>%
-  filter(country=="United States") %>%
-  add_lines(name="United States", color=I("blue")) %>%
-  add_lines(data = filter(gapminder, country=="Canada"),
-    name="Canada", color=I("red"))
-```
----
-
-# plot_ly: line-plots
-
-.font150[
-* **Your turn:** In the `gapminder` dataset, select three countries of your choice and plot them.
-]
 ---
 
 class: inverse, center, middle
 
-# plot_ly: bar-plots
+# gather
 
 <html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-# `plot_ly` Bar-plots
+# gather
 
 .font130[
 
-* Bar plots are great to visualize qualitative data.
+To tidy  a dataset, we need to *gather* multiple columns, and gathers them into key-value pairs: it makes "wide" data longer.
 
-* The most basic syntax is the following:
+Syntax:
 ```
-  plot_ly(data = data_set_here, 
-    x = ~x_axis_here, 
-    y = ~y_axis_here, 
-    type = 'bar')
+gather(dataset, set_of_columns, 
+       key="name of variable whose values form the column names", 
+       value="name of variable whose values are spread over the cells")
 ```
-
-- Let's try?!
-
 ]
 
 ---
 
-# plot_ly: bar-plots
-
-```
-tbl <- table(PErisk$prsexp2); tbl <- as.data.frame(tbl)
-plot_ly(data = tbl, x = ~Var1, y = ~Freq,
-  type = 'bar') %>%
-  layout(title = 'Expropriation Risk in 1992', # Layout
-         xaxis = list(title = 'Expropriation Risk (high to low)'))
-```
-
----
-
-# plot_ly: bar-plots
+# gather
 
 .font130[
-* We can add multiple bars to the barplot:
-]
+Example:
 
+```{r}
+gather(table1, `1999`,`2000`, key="year", value="population")
 ```
-tbl <- table(PErisk$prsexp2); tbl <- as.data.frame(tbl)
-tbl2 <- table(PErisk$prscorr2); tbl2 <- as.data.frame(tbl2)
-dat <- data.frame(Risk = tbl$Var1, exprop = tbl$Freq, corrup = tbl2$Freq)
-plot_ly(data = dat, x = ~Risk, y = ~exprop,
-  type = 'bar', name = 'Expropriation Risk') %>%
-  add_trace(y = ~corrup, name = 'Corruption Risk') %>%
-  layout(title = 'Investment Risks in 1992', # Layout
-         yaxis = list(title = 'Frequencies'),
-         xaxis = list(title = 'Risks'),
-         barmode = 'group')
-```
+
+]
 
 ---
 
-# plot_ly: bar-plots
+# gather
 
-.font150[
-* **Your turn:** In the `tips` dataset, create a barplot with gender and days that the person goes to a pub.
+.font130[
+Example:
+
+```{r}
+gather(table2, "1999":"2000", key=year, value = cases)
+```
+
+**Your Turn**: Do the same with the `tbl1` and `tbl2` datasets. Save the results and join the datasets.
+
 ]
+
+---
+
+class: inverse, center, middle
+
+# spread
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# spread
+
+.font130[
+
+*spread()* is the opposite of *gather()*.
+
+*gather()* makes wide tables narrower and longer, *spread()* makes long tables shorter and wider.
+
+Syntax:
+```
+spread(dataset, 
+       key="the column that contains variable name", 
+       value="the column that contains values forms multiple variables")
+```
+]
+
+---
+
+# spread
+
+.font130[
+Example:
+
+```{r}
+spread(table3, key= "type", value= "count")
+```
+
+**Your Turn**: Check out `tbl3`. Then, spread it by `type`.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# separate and unite
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# separate and unite
+
+.font130[
+
+*separate()* pulls apart one column into multiple columns, *unite()* is the inverse of *separate()*.
+
+Check `table4`. Note that the rate variable has two variables inside it: cases and population. To separate them:
+
+Syntax for *separate()*:
+```
+separate(table, variable_separate, into=c('v1','v2'), sep="/")
+```
+]
+
+---
+
+# separate and unite
+
+.font130[
+Example:
+
+```{r}
+table5 <- separate(table4, rate, into=c('case','population'), sep="/")
+table5
+```
+
+**Your Turn**: Do the same separate for `tbl4`.
+
+]
+
+---
+
+# separate and unite
+
+.font130[
+We can also separate by position:
+
+```{r}
+separate(table3, year, into = c("century", "year"), sep=2)
+```
+
+**Your Turn**: Do the same to separate `tbl3` year by position.
+
+]
+
+---
+
+# separate and unite
+
+.font130[
+
+Syntax for *unite()*:
+```
+unite(table, name_col, col1, col2, ..., sep="/")
+```
+]
+
+---
+
+# separate and unite
+
+.font130[
+Example:
+
+```{r}
+unite(table5, col = rate, case, population, sep="/")
+```
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# complete
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# complete
+
+.font130[
+
+*complete()* is useful to fill up the columns with missing data, based on a given pattern.
+
+Suppose we have the following dataset:
+
+```{r}
+df <- tibble(
+  group = c(1:2, 1), item_id = c(1:2, 2),
+  item_name = c("a", "b", "b"),
+  value1 = 1:3, value2 = 4:6
+)
+df
+```
+]
+
+---
+
+# complete
+
+.font130[
+We can complete by group, item_id and item_name:
+
+```{r}
+df %>% complete(group, nesting(item_id, item_name))
+```
+
+**Your Turn**: Do the same complete for `stocks1`. What happened?
+
+]
+
 ---
 
 class: inverse, center, middle
