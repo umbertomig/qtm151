@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 # QTM 151
-## Week 5 – dplyr
+## Week 5 – forcats
 <html>
 <div style="float:left">
 
@@ -57,35 +57,16 @@ class: center, middle, inverse, title-slide
 
 .font130[
 
-* We learned:
- + `qplot`: quick way to make ggplot graphs.
- + `ggplotly`: transform ggplot objects into nice plotly viz.
- + `plot_ly`: create nice plotly graphs.
+We learned:
+ + programming methods
+ + `dplyr *_join` methods: joining data
+ + `tidyr` methods: reshape datasets
 
-* Do you have any questions about any of these functions?
+**Great job!!**
 
-* Quiz is posted!
+Do you have any questions about any of these contents?
 
-* Our GitHub page is: https://github.com/umbertomig/qtm151
-]
-
----
-
-# Today's Agenda
-
-.font130[
-
-`dplyr` package for data manipulation: 
-* Observation/row:
-    + filter
-    + arrange
-* Variable/column:
-    + select
-    + rename
-    + mutate
-* Get summaries:
-    + summarise
-    + group_by: changes the scope of each function from operating on the entire dataset to operating on it group-by-group
+Today we are going to talk about **forcats** (package for categorical variables)
 
 ]
 
@@ -114,9 +95,21 @@ library(tidyverse)
 
 ```
 ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
-## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   2.0.0     ✓ forcats 0.5.1
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1
+```
+
+```
+## Warning: package 'tidyr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'readr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'dplyr' was built under R version 4.1.2
 ```
 
 ```
@@ -128,292 +121,89 @@ library(tidyverse)
 
 ---
 
-# Loading datasets
+# Loading data - GSS
 
 .font130[
 
 ```r
-# Loading tips dataset
-tips &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv') # or your locale folder
-head(tips, 2)
+# Loading the GSS Cat and GSS
+gss_cat &lt;- read_csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss_cat.csv')
 ```
 
 ```
-##   obs totbill  tip sex smoker day  time size
-## 1   1   16.99 1.01   F     No Sun Night    2
-## 2   2   10.34 1.66   M     No Sun Night    3
+## Rows: 21483 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (6): marital, race, rincome, partyid, relig, denom
+## dbl (3): year, age, tvhours
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 ```r
-# Loading PErisk dataset
-PErisk &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
-head(PErisk, 2)
+head(gss_cat, 2)
 ```
 
 ```
-##     country courts      barb2 prsexp2 prscorr2    gdpw2
-## 1 Argentina      0 -0.7207754       1        3  9.69017
-## 2 Australia      1 -6.9077550       5        4 10.30484
+## # A tibble: 2 × 9
+##    year marital         age race  rincome       partyid      relig denom tvhours
+##   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1  2000 Never married    26 White $8000 to 9999 Ind,near rep Prot… Sout…      12
+## 2  2000 Divorced         48 White $8000 to 9999 Not str rep… Prot… Bapt…      NA
 ```
-]
-
----
-class: inverse, center, middle
-
-# select: variable selection
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# select: variable selection
-
-.font130[
-
-* Suppose we want to select only the numeric variables in the `PErisk` dataset.
-
-* We do the following:
-
 
 ```r
-PErisk_num &lt;- select(PErisk, barb2, gdpw2)
-head(PErisk_num, 2)
+gss &lt;- read_csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/gss.csv')
 ```
 
 ```
-##        barb2    gdpw2
-## 1 -0.7207754  9.69017
-## 2 -6.9077550 10.30484
-```
-]
-
----
-
-# select: variable selection
-
-.font130[
-
-The syntax to use the `select` is the following:
-
-```
-dat_final &lt;- select(dat_initial, var1, var2, var3, ...)
-```
-**Your turn**: select the variables `tip` and `totbill` in the `tips` dataset.
-
-]
-
-
----
-
-# select: variable selection
-
-.font150[
-
-We can select slices and by characteristics. For example:
-
-```
-aux &lt;- select(PErisk, country, gdpw2)
-
-aux &lt;- PErisk %&gt;%
-  select(country,gdpw2)
-
-aux &lt;- select(PErisk, -c(courts, prsexp2, prscorr2))
-aux &lt;- select(PErisk, courts:prsexp2)
-aux &lt;- select(PErisk, starts_with("co"))
+## Rows: 53474 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (11): region, income, happy, finrela, marital, degree, health, wrkstat, ...
+## dbl  (2): age, year
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-]
+```r
+head(gss, 2)
+```
 
----
-
-# select: variable selection
-
-.font130[
-
-And the methods we can apply in the select are the following:
-
-| Method             | Effect                                          |
-|--------------------|-------------------------------------------------|
-| v1, v2, v3 (etc)   | Select given variables                          |
-| starts_with('xyz') | Select starting with `xyz`                      |
-| ends_with('xyz')   | Select ending with `xyz`                        |
-| contains('xyz')    | Select variables that have `xyz` in their names |
-| vk:vn              | All variables between `vn` and `vk`             |
-| -(vk:vn)           | All but `vk` to `vn`                            |
-
-We can even rename variables using `select`.
+```
+## # A tibble: 2 × 13
+##   region        income happy   age finrela marital degree health wrkstat partyid
+##   &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  
+## 1 E. NOR. CENT… $1000… NOT …    54 AVERAGE MARRIED LT HI… FAIR   WORKIN… OTHER …
+## 2 E. NOR. CENT… $7000… VERY…    51 AVERAGE MARRIED LT HI… GOOD   KEEPIN… NOT ST…
+## # … with 3 more variables: polviews &lt;chr&gt;, sex &lt;chr&gt;, year &lt;dbl&gt;
+```
 ]
 
 ---
 
 class: inverse, center, middle
 
-# rename: change names variables
+# forcats
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# rename: change names variables
-
-.font150[
-
-We can change the names of the variables using `rename`.
-
-Basic syntax:
-
-```
-new_dat &lt;- rename(dat, 
-                  new_name1 = old_name1,
-                  ...)
-```
-
-]
-
----
-
-# rename: change names variables
+# forcats
 
 .font130[
+Provide tools to work with categorical data. The methods we will use in here are:
 
-Let's rename the `PErisk` courts to `indep_judiciary`:
-
-
-```r
-PErisk_new &lt;- rename(PErisk, indep_judiciary = courts)
-head(PErisk_new, 2)
-```
-
-```
-##     country indep_judiciary      barb2 prsexp2 prscorr2    gdpw2
-## 1 Argentina               0 -0.7207754       1        3  9.69017
-## 2 Australia               1 -6.9077550       5        4 10.30484
-```
-
-**Your turn**: rename the `totbill` to `totalbill` in the dataset `tips`.
-
-]
-
----
-
-
-class: inverse, center, middle
-
-# filter: select pieces of the dataset
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# filter: select pieces of the dataset
-
-.font150[
-
-We can select desired rows of the dataset using the function `filter`.
-
-Basic syntax:
-
-```
-new_dat &lt;- filter(dat, condition1, condition2, ...)
-```
-
-]
-
----
-
-# filter: select pieces of the dataset
-
-.font130[
-
-Let's filter the `PErisk` to keep all countries without independent judiciary:
-
-
-```r
-PErisk_new &lt;- filter(PErisk, 
-                     courts == 0)
-head(PErisk_new, 2)
-```
-
-```
-##      country courts      barb2 prsexp2 prscorr2    gdpw2
-## 1  Argentina      0 -0.7207754       1        3 9.690170
-## 2 Bangladesh      0  0.7759748       1        0 8.379768
-```
-
-]
-
----
-
-# filter: select pieces of the dataset
-
-.font130[
-
-* The filter operators are the following:
-
-
-```r
-#| Operator | Meaning                                |
-#|----------|----------------------------------------|
-#| &lt; and &lt;= | Smaller than and Smaller than or equal |
-#| &gt; and &gt;= | Greater than and Treated than or equal |
-#| ==       | Equal                                  |
-#| !=       | Different                              |
-#| !        | Negation                               |
-#| |        | Or                                     |
-#| &amp;        | And                                    |
-```
-
-**Your turn**: filter the `tips` dataset, keeping only the tips above $4.52, by Non-smokers.
-
-]
-
----
-
-
-class: inverse, center, middle
-
-# arrange: sort the dataset
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# arrange: sort the dataset
-
-.font150[
-
-We can sort the dataset by levels, according to the needs of our analysis.
-
-Basic syntax:
-
-```
-new_dat &lt;- arrange(dat, var1, 
-                   desc(var2), 
-                   desc(var3), var4, ...)
-```
-]
-
----
-
-# arrange: sort the dataset
-
-.font130[
-
-Let's arrange the `PErisk` by the gdpw2, in descending order:
-
-
-```r
-PErisk_new &lt;- arrange(PErisk, desc(gdpw2))
-head(PErisk_new, 2)
-```
-
-```
-##       country courts     barb2 prsexp2 prscorr2    gdpw2
-## 1      Canada      1 -6.907755       5        5 10.41018
-## 2 Switzerland      1 -6.907755       5        5 10.34110
-```
-
-**Your turn**: Arrange the `tips` by the size of the tip, in ascending order. See the head and the tail of the arranged data.
+* `fct_reorder()`: reorder levels in a categorical variable
+* `fct_relevel()`: move the position of a particular level
+* `fct_infreq()`: reorder levels in increasing frequency
+* `fct_recode()`: recode factor variable
+* `fct_collapse()`: collapse levels in categorical variable
+* `fct_lump()`: lump together small groups
+* `case_when()`: useful to recode data
 
 ]
 
@@ -421,50 +211,52 @@ head(PErisk_new, 2)
 
 class: inverse, center, middle
 
-# mutate: make transformation in the dataset
+# fct_reorder
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# mutate: make transformation in the dataset
+# fct_reorder
 
-.font150[
+.font130[
 
-We can make transformations in the dataset using the function `mutate`
+Suppose we want to study the relationship between religion and time watching tv.
 
-Basic syntax:
+This graph here doesn't help much:
 
 ```
-new_dat &lt;- mutate(dat, 
-                  new_var = do_something_func(old_var),
-                  ...)
-```
+relig_summary &lt;- gss_cat %&gt;%
+  group_by(relig) %&gt;%
+  summarise(tvhours=mean(tvhours, na.rm = T)) 
 
+ggplot(relig_summary, aes(x=tvhours, y=relig)) +
+  geom_point()
+```
 ]
 
 ---
 
-# mutate: make transformation in the dataset
+# fct_reorder
 
 .font130[
 
-Let's mutate the `PErisk`, to show the gdp in dollars:
+Reordering the levels of a factor using *fct_reorder()* helps with the interpretation.
 
+*fct_reorder()* takes three arguments:
 
-```r
-PErisk_new &lt;- mutate(PErisk,
-                     gdppc = exp(gdpw2))
-head(PErisk_new, 2)
+- f, the factor whose levels you want to modify.
+
+- x, a numeric vector that you want to use to reorder the levels.
+
+- Optionally, fun, a function used if there are multiple values of x for each value of f. The default value is median.
+
+```
+ggplot(relig_summary, aes(x=tvhours, y=fct_reorder(relig, tvhours))) +
+  geom_point()
 ```
 
-```
-##     country courts      barb2 prsexp2 prscorr2    gdpw2    gdppc
-## 1 Argentina      0 -0.7207754       1        3  9.69017 16157.99
-## 2 Australia      1 -6.9077550       5        4 10.30484 29876.87
-```
-
-**Your turn**: Let's find the percentage of the tips based on the total bill. Divide the tip by the total bill, and multiply by 100. Sort the data by this variable.
+**Your turn:** plot the marital status by frequency (use the function counts). Then reorder it.
 
 ]
 
@@ -472,50 +264,188 @@ head(PErisk_new, 2)
 
 class: inverse, center, middle
 
-# summarise: summaries of the dataset
+# fct_relevel
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# summarise: summaries of the dataset
+# fct_relevel
 
-.font150[
+.font130[
 
-We can compute summaries of the dataset, performed by a desired variable.
+In the religions x tv hours plot, note that the "Don't know" is the largest category.
 
-Basic syntax:
+It is also not very informative. We can easily send it to the bottom:
 
 ```
-new_dat &lt;- summarise(dat, 
-                     my_summary = do_smt_func(vars),
-                     ...)
+ggplot(relig_summary, 
+       aes(x = tvhours, 
+           y = fct_relevel(relig, "Don't know", after=0))) +
+    geom_point()
 ```
+]
+
+---
+
+# fct_relevel
+
+.font130[
+
+Can we do ascending, and place the "Don't know" in the bottom?
+
+Yes!
+
+```
+ggplot(relig_summary, 
+       aes(x=tvhours, 
+           y = fct_reorder(relig, tvhours) %&gt;%
+             fct_relevel("Don't know", after=0))) + 
+  geom_point()
+```
+
+**Your turn:** plot the party id by frequency (use the function counts). Then reorder it. Then place "No answer" and "Independent" at the bottom.
 
 ]
 
 ---
 
-# summarise: summaries of the dataset
+class: inverse, center, middle
+
+# fct_infreq
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_infreq
 
 .font130[
 
-Let's compute the mean and standard deviation of the `gdpw2`, and of `barb2`.:
+You can use `fct_infreq()` to order levels in increasing frequency:.
 
+* This is the simplest type of reordering because it does not need any extra variables.
 
-```r
-PErisk_new &lt;- summarise(PErisk,
-                        mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2),
-                        mean_barb2 = mean(barb2), std_barb2 = sd(barb2))
-head(PErisk_new, 2)
-```
+You may want to combine with `fct_rev()`.
 
 ```
-##   mean_gdp   std_gdp mean_barb2 std_barb2
-## 1 9.041875 0.9702639  -2.925557  2.707211
+gss_cat %&gt;%
+  mutate(marital = fct_infreq(marital)) %&gt;%
+  ggplot(aes(marital)) +
+    geom_bar()
+```
+]
+
+---
+
+# fct_infreq + fct_rev (elegant)
+
+.font130[
+
+And that's what happens when we combine both:
+
+```
+gss_cat %&gt;%
+mutate(marital = marital %&gt;% fct_infreq() %&gt;% fct_rev()) %&gt;%
+  ggplot(aes(marital)) + geom_bar()
 ```
 
-**Your turn**: Compute the mean and standard deviation of the tips.
+**Your turn:** plot the race by frequency.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_recode
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_recode
+
+.font130[
+
+Recode a categorical variable is always painful, regardless of the statistical software. 
+
+Luckly, the people that wrote forcats made it as easy as it can be by creating the `fct_recode` function.
+
+Check this plot. TV hours by party affiliation:
+
+```
+gss_cat %&gt;% 
+  drop_na(tvhours) %&gt;% 
+  group_by(partyid) %&gt;%
+  summarise(meantv=mean(tvhours)) %&gt;%
+  ggplot(aes(x=meantv, y=fct_reorder(partyid, meantv)))+
+  geom_point()
+```
+]
+
+---
+
+# fct_recode
+
+.font130[
+
+Note that we can combine some low-information categories together as `others`:
+
+```
+gss_cat %&gt;%
+  drop_na(tvhours) %&gt;%
+  mutate(partyidnew = fct_recode(partyid,
+    "Republican, strong"    = "Strong republican",
+    "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep",
+    "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat",
+    "Democrat, strong"      = "Strong democrat",
+    "Other"                 = "No answer",
+    "Other"                 = "Don't know",
+    "Other"                 = "Other party")) %&gt;%    
+  group_by(partyidnew) %&gt;%
+  summarise(meantvhours = mean(tvhours)) %&gt;%
+  ggplot(aes(x=meantvhours, 
+             y=fct_reorder(partyidnew, meantvhours))) +
+  geom_point()
+```
+
+**Your turn:** plot the health in the gss dataset. Recode to make it interesting.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# fct_collapse
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# fct_collapse
+
+.font130[
+
+`fct_collapse` is good to put several factor levels together.
+
+Look at this code for party id frequency:
+
+```
+gss_cat %&gt;%
+  mutate(partyidnew = fct_collapse(partyid,
+    other = c("No answer", "Don't know", "Other party"),
+    rep = c("Strong republican", "Not str republican"),
+    ind = c("Ind,near rep", "Independent", "Ind,near dem"),
+    dem = c("Not str democrat", "Strong democrat")
+  )) %&gt;%
+  count(partyidnew)
+```
+
+**Your turn:** collapse the gss `wrkstat` variable to simplify it.
 
 ]
 
@@ -524,57 +454,77 @@ head(PErisk_new, 2)
 
 class: inverse, center, middle
 
-# summarise and group_by: summaries of the dataset by groups
+# fct_lump
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# summarise and group_by: summaries of the dataset by groups
-
-.font150[
-
-We can compute summaries of the dataset, performed by a desired variable.
-
-Basic syntax:
-
-```
-new_dat &lt;- dat %&gt;%
-  group_by(var_to_group) %&gt;%
-  summarise(my_summary = do_smt_func(vars),
-            ...)
-```
-]
-
----
-
-# summarise and group_by: summaries of the dataset by groups
+# fct_lump
 
 .font130[
-Let's compute the mean and standard deviation of the `gdpw2`, by expropriation risk:
 
+`fct_lump` aggregates the small-frequency levels together.
 
-```r
-PErisk_new &lt;- PErisk %&gt;% group_by(prsexp2) %&gt;%
-  summarise(mean_gdp = mean(gdpw2), std_gdp = sd(gdpw2))
-head(PErisk_new, 2)
-```
+The default is the most frequent + others:
 
 ```
-## # A tibble: 2 × 3
-##   prsexp2 mean_gdp std_gdp
-##     &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt;
-## 1       0     8.98   0.555
-## 2       1     8.48   1.04
+gss_cat %&gt;%
+  mutate(relignew = fct_lump(relig)) %&gt;%
+  count(relignew)
 ```
+
 ]
 
 ---
 
-# summarise and group_by: summaries of the dataset by groups
 
-.font150[
-**Your turn**: Compute the mean and standard deviation of the tips, grouped by the smoker and non-smoker.
+# fct_lump
+
+.font130[
+
+If we want the five most frequent values + others:
+
+```
+gss_cat %&gt;%
+  mutate(relig = fct_lump(relig, n=5)) %&gt;%
+  count(relig)
+```
+
+**Your turn:** count the levels in the `gss_cat` `denom` variable. Find a nice way to display it.
+
+]
+
+---
+
+
+class: inverse, center, middle
+
+# case_when
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# case_when
+
+.font130[
+
+`case_when` is useful for recoding variables. Look at the example below:
+
+```
+mtcars %&gt;%
+  mutate (
+    gear_char =
+      case_when(
+        gear==3 ~ "three",
+        gear==4 ~ "four",
+        gear==5 ~ "five"
+      )
+  )
+```
+
+**Your turn:** for `gss_cat`, create a plot to look at how average age varies across income level (rincome)
 
 ]
 
@@ -600,6 +550,7 @@ class: inverse, center, middle
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "ratio": "4:3",
+"self-contained": false,
 "highlightLines": true,
 "countIncrementalSlides": false,
 "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
