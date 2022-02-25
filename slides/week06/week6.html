@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 # QTM 151
-## Week 6 – dplyr (join datasets)
+## Week 6 – lubridate
 <html>
 <div style="float:left">
 
@@ -58,33 +58,18 @@ class: center, middle, inverse, title-slide
 .font130[
 
 We learned:
- + `qplot`: quick way to make ggplot graphs.
- + `ggplotly`: transform ggplot objects into nice plotly viz.
- + `plot_ly`: create nice plotly graphs.
- + `dplyr` methods: data wrangling
+ + orogramming methods
+ + `dplyr *_join` methods: joining data
+ + `tidyr` methods: reshape datasets
+ + `forcats` methods: working with categorical variables
+
+**Great job!!**
 
 Do you have any questions about any of these contents?
 
-The quiz is online!
+Today we are going to talk about **lubridate** (package for dates and time)
 
 Our GitHub page is: https://github.com/umbertomig/qtm151
-]
-
----
-
-# dplyr Recap and Today's Agenda
-
-.font130[
-
-`dplyr` is great for the following data manipulation: 
-+ filter
-+ arrange
-+ select
-+ rename
-+ mutate
-+ summarise and group_by
-
-* **dplyr is also great to merge datasets together**
 ]
 
 ---
@@ -112,9 +97,21 @@ library(tidyverse)
 
 ```
 ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
-## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   2.0.0     ✓ forcats 0.5.1
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1
+```
+
+```
+## Warning: package 'tidyr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'readr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'dplyr' was built under R version 4.1.2
 ```
 
 ```
@@ -122,85 +119,20 @@ library(tidyverse)
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 ```
-]
-
----
-
-# Loading data
-
-.font130[
 
 ```r
-band &lt;- tribble(
-   ~name,     ~band,
-  "Mick",  "Stones",
-  "John", "Beatles",
-  "Paul", "Beatles")
-
-instrument &lt;- tribble(
-    ~name,   ~plays,
-   "John", "guitar",
-   "Paul",   "bass",
-  "Keith", "guitar")
-
-instrument2 &lt;- tribble(
-    ~artist,   ~plays,
-   "John", "guitar",
-   "Paul",   "bass",
-  "Keith", "guitar")
-```
-]
-
----
-
-# Loading data
-
-.font130[
-
-```r
-# Loading PErisk dataset
-PErisk &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
-head(PErisk, 2)
+library(lubridate)
 ```
 
 ```
-##     country courts      barb2 prsexp2 prscorr2    gdpw2
-## 1 Argentina      0 -0.7207754       1        3  9.69017
-## 2 Australia      1 -6.9077550       5        4 10.30484
-```
-
-```r
-# First dataset
-dat1 &lt;- PErisk %&gt;% 
-  filter(country %in% PErisk$country[1:5]) %&gt;%
-  select(country, courts:prsexp2)
-dat1
+## 
+## Attaching package: 'lubridate'
 ```
 
 ```
-##      country courts      barb2 prsexp2
-## 1  Argentina      0 -0.7207754       1
-## 2  Australia      1 -6.9077550       5
-## 3    Austria      1 -4.9103370       5
-## 4 Bangladesh      0  0.7759748       1
-## 5    Belgium      1 -4.6173440       5
-```
-
-```r
-# Second dataset
-dat2 &lt;- PErisk %&gt;% 
-  filter(country %in% PErisk$country[2:6]) %&gt;%
-  select(country, prscorr2, gdpw2)
-dat2
-```
-
-```
-##      country prscorr2     gdpw2
-## 1  Australia        4 10.304840
-## 2    Austria        4 10.100940
-## 3 Bangladesh        0  8.379768
-## 4    Belgium        4 10.250120
-## 5    Bolivia        0  8.583543
+## The following objects are masked from 'package:base':
+## 
+##     date, intersect, setdiff, union
 ```
 ]
 
@@ -208,29 +140,25 @@ dat2
 
 class: inverse, center, middle
 
-# Join Datasets
+# lubridate
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
-
 ---
 
-# Join Datasets
+# lubridate
 
 .font130[
-Join two or more datasets together is a common problem in data wrangling.
+Provide tools to work with dates. The methods we will use in here are:
 
-Lucky us, `dplyr` makes the job easy. Here are the functions we can use:
-
-|  Function  |                     Description                     |
-|:----------:|:---------------------------------------------------:|
-| inner_join | Keep data in both datasets                          |
-| left_join  | Keep all data in the left dataset                   |
-| right_join | Keep all data in the right dataset                  |
-| full_join  | Keep all data in both datasets                      |
-| semi_join  | Keep cases in the first that are also in the second |
-| anti_join  | Keep cases in the first that are NOT in the second  |
-
+* `ymd()`, `ydm()`, `mdy()`, `myd()`, `dmy()`, `dym()`: read text into data, provided in this order.
+* `parse_date_time()`: parse other date and time objects.
+* `make_date()` and `make_datetime()`: parse dates and times.
+* `round_dates()` and others: round dates and times.
+* `difftime()`: time/dates differences.
+* `now()` and `today()`: current dates and times.
+* `seconds()`, `dseconds()` and others: create time spans and durations.
+* `%--%` and date intervals: create and check date intervals.
 
 ]
 
@@ -238,45 +166,75 @@ Lucky us, `dplyr` makes the job easy. Here are the functions we can use:
 
 class: inverse, center, middle
 
-# left_join
+# Dates and Strings
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# left_join
+# Dates and Strings
 
 .font130[
-*left_join(x, y, by="key variable")*: join the datasets, keeping all the observations (rows) in x
 
-* A key is a variable that uniquely identifies an observation, otherwise, we need multiple variables to identify an observation.
+Without declare an object as a date, it is just a string.
 
-![](leftjoin.png)
+Check that in R (for ISO 8601):
+
+```
+dt &lt;- '2021-02-22'
+class(dt)
+str(dt)
+
+dt &lt;- as.Date(dt)
+class(dt)
+str(dt)
+```
+]
+
+
+---
+
+class: inverse, center, middle
+
+# ymd() and related functions
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# ymd() and related functions
+
+.font130[
+
+These functions are great to parse dates:
+
+```
+x &lt;- "2010 September 20th"
+ymd(x)
+
+y &lt;- "02.01.2010"
+dmy(y)
+
+z &lt;- "Sep, 12th 2010 14:00"
+mdy_hm(z)
+
+a &lt;- "2016-07-08 12:34:56"
+ymd_hms(a)
+```
 ]
 
 ---
 
-# left_join
+# ymd() and related functions
 
 .font130[
-Example:
 
+**Your turn:** Turn into date:
 
-```r
-dat&lt;-left_join(band, instrument, by="name")
-dat
-```
-
-```
-## # A tibble: 3 × 3
-##   name  band    plays 
-##   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; 
-## 1 Mick  Stones  &lt;NA&gt;  
-## 2 John  Beatles guitar
-## 3 Paul  Beatles bass
-```
-
-**Your turn:** Join the datasets `dat1` and `dat2` using left_join. Describe what happened.
+1. "2010-01-22"
+2. "12-02-1234 12:30:25"
+3. "May 18, 1933"
+4. "1st June 2012"
 
 ]
 
@@ -284,46 +242,47 @@ dat
 
 class: inverse, center, middle
 
-# right_join
+# parse_date_time
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# right_join
+# parse_date_time
 
 .font130[
 
-*right_join(x, y, by="")*: keep all the observations (rows) in y
+`parse_date_time()` takes two arguments: First, a vector with dates. Second, a vector with orders to parse.
 
-* The opposite way of *left_join()*
+E. g.: `parse_date_time(date = "some_date", order = "some_order")`
 
-![](rightjoin.png)
+Some patterns:
+
+- `dmy`: day, month, year (4-digit)
+- `mdY`: month, day, year (2-digit)
+- `ymdHMS`: year (4-digit), month, day, hours, minutes, seconds
+
+For more: `help(parse_date_time)`
 ]
 
 ---
 
-# right_join
+# parse_date_time
 
 .font130[
-Example:
 
-
-```r
-dat&lt;-right_join(band,instrument, by="name")
-dat
-```
+Examples:
 
 ```
-## # A tibble: 3 × 3
-##   name  band    plays 
-##   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; 
-## 1 John  Beatles guitar
-## 2 Paul  Beatles bass  
-## 3 Keith &lt;NA&gt;    guitar
+parse_date_time(c("11-01-2016", "2016 Jan 11th"),
+  order = c("dmy", "ymd"))
+parse_date_time("11-01-2016", order = "dmy")
 ```
 
-**Your turn:** Join the datasets `dat1` and `dat2` using right_join. Describe what happened.
+**Your turn:** Parse:
+
+1. `x &lt;- c("April 13, 2003", "17 April 2005")`
+2. `y &lt;- "January 10, 2020 at 23:30:35"`
 
 ]
 
@@ -331,189 +290,214 @@ dat
 
 class: inverse, center, middle
 
-# inner_join
+# make_date() and make_datetime()
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# inner_join
+# make_date() and make_datetime()
 
 .font130[
 
-*inner_join()* keeps all the observations in **both** x and y
+Both functions work to build date and time from pieces. The syntax for both functions is straightforward:
 
-An inner join keeps observations that appear in both tables. But unmatched rows are not included in the result, it is easy to lose observations. 
+```
+make_date(year = 2012, month = 3, day = 27)
+
+make_datetime(year = 1234, month = 5, day = 12, 
+  hour = 1, min = 23, sec = 45)
+```
+
+**Your turn:** make dates from:
+- yrs &lt;- c(1234, 1222, 2020)
+- mos &lt;- c(4, 2, 12)
+- dss &lt;- c(12, 12, 20)
 
 ]
 
 ---
-
-# inner_join
-
-.font130[
-Example:
-
-
-```r
-inner_join(band, instrument, by="name")
-```
-
-```
-## # A tibble: 2 × 3
-##   name  band    plays 
-##   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; 
-## 1 John  Beatles guitar
-## 2 Paul  Beatles bass
-```
-
-**Your turn:** Join the datasets `dat1` and `dat2` using inner_join. Describe what happened.
-
-]
-
----
-
 
 class: inverse, center, middle
 
-# full_join
+# Extract parts functions
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# full_join
+# Extract parts functions
 
 .font130[
 
-*full_join* keeps all observations in x and y
-
-An full_join keeps observations that appear in either x or y.
-
-![](fulljoin.png)
+- year(): Year with century
+- month(): Month
+- day(): Day of month
+- hour(): Hour
+- min(): Minute
+- second(): Second
+- wday(): Weekday
+- yday(): Day of year
+- tz(): Timezone
+- quarter(): Quarter
+- semester(): Semester
 
 ]
 
 ---
 
-# full_join
+# Extract parts functions
 
-.font130[
-Example:
+.font150[
 
+**Your turn:** Parse the dates and try these functions with:
 
-```r
-full_join(band, instrument, by="name")
-```
-
-```
-## # A tibble: 4 × 3
-##   name  band    plays 
-##   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; 
-## 1 Mick  Stones  &lt;NA&gt;  
-## 2 John  Beatles guitar
-## 3 Paul  Beatles bass  
-## 4 Keith &lt;NA&gt;    guitar
-```
-
-**Your turn:** Join the datasets `dat1` and `dat2` using full_join Describe what happened.
+1. "2010-01-22"
+2. "12-02-1234 12:30:25"
 
 ]
 
 ---
-
 
 class: inverse, center, middle
 
-# semi_join
+# round_dates() and others
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# semi_join
+# round_dates() and others
 
 .font130[
 
-*semi_join(x,y, by="")* keeps all the observations of x that have a match in y
+To round dates we can use:
 
-Use semi_join() to collect the artists in *band* that have instrument info in *instrument*.
+- `round_dates()`: round to the nearest precision.
+- `ceiling_date()`: round up the nearest precision.
+- `floor_dates()`: round down the nearest precision.
 
-![](semi.png)
+Precision units:
+
+- "second" , "minute" , "hour" , "day" , "week" , "month",
+"bimonth" , "quarter" , "halfyear" , "year", or multiples (e.g. "10 minutes")
 
 ]
 
 ---
 
-# semi_join
+# round_dates() and others
 
 .font130[
-Example:
 
-
-```r
-semi_join(band, instrument, by="name")
-```
+Examples:
 
 ```
-## # A tibble: 2 × 2
-##   name  band   
-##   &lt;chr&gt; &lt;chr&gt;  
-## 1 John  Beatles
-## 2 Paul  Beatles
+d &lt;- ymd_hms("1234-04-03 07:13:28 UTC")
+floor_date(d, unit = 'day')
+
+# Round to nearest 5 minutes
+round_date(d, unit = '5 minutes')
+
+# Round up to week 
+ceiling_date(d, unit = 'week')
+
+# Fun
+ceiling_date(d, unit = 'hour') - floor_date(d, unit = 'hour')
 ```
 
-**Your turn:** Join the datasets `dat1` and `dat2` using semi_join. Describe what happened.
+**Your turn:** Round `d` in the three different ways: `d &lt;- ymd_hms("1981-08-18 18:08:28 UTC")`
 
 ]
 
 ---
-
 
 class: inverse, center, middle
 
-# anti_join
+# difftime
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# anti_join
+# difftime
 
 .font130[
 
-*anti_join(x,y, by="")* drops all the observations of x that have a match in y.
+We can find difference between two dates using difftime.
 
-*anti_join()* also provide a great way to diagnose joins that go wrong.
+```
+difftime(today(), mdy("May 20, 2020"), units = 'days')
+difftime(now(), mdy_hms("May 20, 2020 22:12:22"), units = 'secs')
+```
 
-![](anti.png)
+**Your turn:** Find how many seconds since your birthday.
 
 ]
 
 ---
 
-# anti_join
+class: inverse, center, middle
+
+# seconds(), dseconds() and other duration functions
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# seconds(), dseconds() and other duration functions
 
 .font130[
-Example:
 
-
-```r
-anti_join(band, instrument, by="name")
-```
+We can use duration to change dates:
 
 ```
-## # A tibble: 1 × 2
-##   name  band  
-##   &lt;chr&gt; &lt;chr&gt; 
-## 1 Mick  Stones
+today() - years(1)
+today() + months(1)
+days(2)
+ddays(2)
+now() + seconds(20)
+2*days()
 ```
 
-**Your turn:** Join the datasets `dat1` and `dat2` using anti_join. Describe what happened.
+**Your turn:** Find how many seconds since your birthday.
 
 ]
 
 ---
+
+class: inverse, center, middle
+
+# Intervals
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+
+---
+
+# Intervals
+
+.font130[
+
+We can also compute intervals:
+
+```
+x &lt;- dmy("2 January 1998") %--% dmy("30 March 2018")
+y &lt;- dmy("2 January 2017") %--% dmy("30 March 2020")
+int_start(x)
+int_end(x)
+int_length(x)
+as.period(x)
+dmy("5 January 1998") %within% x
+dmy("5 January 1998") %within% y
+int_overlaps(x, y)
+```
+
+**Your turn:** Compute one interval between your birthday and today. Check it. Does it contains the date `January 20 2000`?
+
+]
+
+---
+
 
 class: inverse, center, middle
 
