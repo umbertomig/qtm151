@@ -1,6 +1,6 @@
 ---
 title: "QTM 151"
-subtitle: "Week 8 -- Final Project Lab <html><div style='float:left'></div><hr color='#EB811B' size=1px width=800px></html>"
+subtitle: "Week 8 - qplot <html><div style='float:left'></div><hr color='#f2a900' size=1px width=800px></html>"
 author: "Umberto Mignozzetti"
 date: ""
 output: 
@@ -44,193 +44,237 @@ options(repos = r)
 
 .remark-slide-number .progress-bar {
   height: 100%;
-  background-color: #EB811B;
+  background-color: #f2a900;
 }
 
 .orange {
-  color: #EB811B;
+  color: #f2a900;
 }
 </style>
 
-# Final Project
+# Recap
 
-.font150[
+.font130[
 
-* Today, we will talk about your final project.
+We learned:
+ + orogramming methods
+ + `dplyr *_join` methods: joining data
+ + `tidyr` methods: reshape datasets
+ + `forcats` methods: working with categorical variables
+ + `lubridate` methods: to work with dates
 
-* I have four types of projects that each of your groups can implement.
+**Great job!!**
 
-* I'll pitch each project, and at the end you have to select a project for your group.
+Do you have any questions about any of these contents?
+
+Today we are going to talk about **qplot** (package for quick plots in ggplot2)
+
+Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
 ---
+
 class: inverse, center, middle
 
-# Option 1 - National Health and Nutrition Examination Survey
+# qplot
 
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
-
----
-
-# NHANES
-
-.font130[
-The [National Health and Nutrition Examination Survey (NHANES)](https://www.cdc.gov/nchs/nhanes/index.htm) is a program designed to assess the health and nutritional status of adults and children in the US.
-
-The survey examines a nationally representative sample of about 5,000 persons each year. It combines interviews and physical examinations. 
-
-The NHANES program began in the early 1960s and has been conducted as a series of surveys focusing on different population groups or health topics.
-
-All questionnaires, datasets, and related documentation are publicly accessible at: https://wwwn.cdc.gov/nchs/nhanes/Default.aspx
-]
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-# NHANES
+# qplot
 
 .font130[
-For your final project, as a first option, please use NHANES 2017-2018 data wave.
-* The only reason for not doing this is if you want to analyze the data over time.
+* `qplot`, as the names says, stands for quick plots.
 
-If you are interested in analyzing trends over the years, my second option suggestion, you can also look into other data collected in previous years. 
-  + Note that each wave is cross-sectional: from year to year, it was NOT repeated measurements from the same individuals.
+* It is great to generate `ggplot` graphs in a hurry.
+
+* And the graphs are indeed `ggplot` objects: you can still add layers to it!
 
 ]
 
 ---
 
-# NHANES
+# qplot - Geoms Available
 
 .font130[
+* Which graphs can we generate?
+  - **"point"**:scatterplots.
+  - **"line"**: line plot.
+  - **"histogram"**
+  - **"boxplot"**
+  - **"density"**
+  - **"bar"**: barplot.
+  - **"smooth"**: Fits a smooth line.
+  - **"dotplot"**: dotplot.
+]
 
-* Choose 2-3 data files from the available list and merge them according to your analytical goals.
+---
 
-![NHANES](./nhanes.png)
- 
-* The data files are in SAS format (XPT), which can be imported into R using the following commands:
 
+# qplot - Options for Customization
+
+.font130[
+* And there are plenty of quick options to customize the graphs.
+  - `data`: Specify the data-frame.
+  - `main`: Title.
+  - `xlab`, `ylab`: x and y axis labels.
+  - `color`: Controls the color of the lines/points.
+  - `fill`: Controls the color of areas (e.g. for histograms).
+  - `size`: Controls the size of points.
+  - `shape`: The shape of points ("circle", "square", "triangle", etc...)
+  - `alpha`: Controls the level of transparency of points/lines/fills.
+  - `lwd`: Line width.
+  - `lty`: Line type ("solid", "dashed", "dotted", etc...).
+  - `facets`: Split up the data into multiple plots.
+]
+
+---
+
+# Loading tidyverse
+
+.font130[
+```{r, tidy=FALSE}
+# Load tidyverse
+library(tidyverse)
 ```
-  library (Hmisc)
-  library (SASxport)
-  a <- read.xport ("file_name.xpt")
+
+]
+
+---
+
+# Loading datasets
+
+.font130[
+```{r, tidy=FALSE}
+# Loading tips dataset
+tips <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv')
+head(tips, 2)
+
+# Loading PErisk dataset
+PErisk <- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv')
+head(PErisk, 2)
 ```
 ]
 
 ---
-class: inverse, center, middle
-
-# Option 2 -- Expedia
-
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
-
----
-
-# Expedia
-
-.font150[
-This dataset is provided by Expedia.com, a travel website, which is used to book airline tickets, hotels, car rentals, and vacation packages. 
-
-The dataset file and video will be on Canvas. 
-
-Hint: this is a large dataset, please start small (one random sample of the dataset).
-]
-
----
 
 class: inverse, center, middle
 
-# Option 3 -- COVID
+# Plots for Continuous Variables
 
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
-
----
-
-# COVID
-
-.font150[
-COVID-19 is still disrupting our way of life.
-
-There are several scholars collecting datasets on COVID around the world
-
-Moreover, NYTimes has built great dataviz on the subject, all in R.
-
-My suggestion is for you to explore the packages about the subject.
-]
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-class: inverse, center, middle
-
-# Option 4 -- World Data
-
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
-
----
-
-# World Data
+# qplot - Histograms
 
 .font130[
-The Quality of Government Institute collects data from all over the world, since 1946 (some variables even early!)
 
-They organize a few datasets that merge together scholars' data, plus their own collected variables.
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=5}
+qplot(PErisk$gdpw2, geom = "histogram", bins = 10)
+```
 
-There are several types of datasets:
-  * Time-Series Cross-Section
-  * Cross-Section only data
-  * Surveys with experts
-  * And many others!
+* **Your turn**: make a histogram of the `tip` variable in the `tips` dataset.
+
+]
+
+---
+
+# qplot - Box-plots
+
+.font130[
+
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=5}
+# Box-plot of log of per capita gdp
+qplot(y = PErisk$gdpw2, geom = "boxplot")
+```
+
+* **Your turn**: make a boxplot of the `totbill` variable in the `tips` dataset.
+
 ]
 
 ---
 
 class: inverse, center, middle
 
-# Rules
+# Plot for Discrete Variables
 
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
-
----
-
-# Final Project: Rules
-
-.font150[
-To receive full marks you will have to apply skills you learned from this course to:
-  - import
-  - tidy, transform, wrangle
-  - and visualize the data 
-  
-You also have to prepare 2-3 slides to present the results with your teammates. Five minutes presentations!
-]
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
 
-# Final Project: Rules
+# qplot - Bar-Plots
 
 .font130[
-Each project will be judge by:
-  - Insight and creativity of the project
-  - Data visualization of the project
-  - Clarity of the presentation
-  
-Important Deadlines:
-  - Nov 12: Submit your one-page project proposal on Canvas (20 pts)
-  - Nov 15: I will notify you my decision / talk to you if I feel the project is unrealistic.
-  - Dec 01: Final submission on Canvas (60 pts)
-  - Dec 03: Presentation (20 pts)
+
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=5}
+# Bar-plot of courts
+qplot(factor(PErisk$courts), geom = "bar")
+```
+
+* **Your turn**: make a bar-plot of the `smoker` variable in the `tips` dataset.
+
 ]
 
+---
+
+class: inverse, center, middle
+
+# Plot for two Continuous Variables
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
 
 ---
+
+# qplot - Scatter-Plot
+
+.font130[
+
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=5}
+qplot(PErisk$gdpw2, PErisk$barb2, geom = "point") + geom_smooth(method = 'lm')
+```
+
+* **Your turn**: make a Scatter-Plot for the `totbill` and the `tips` variables in the `tips` dataset.
+
+]
+
+---
+
+class: inverse, center, middle
+
+# Plot for Continuous x Discrete Variables
+
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
+---
+
+# qplot - Multiple Box-Plots
+
+.font130[
+
+```{r, tidy=FALSE, fig.align='center', fig.height=5, fig.width=5}
+qplot(x = factor(PErisk$courts), y = PErisk$gdpw2, 
+      geom = "boxplot")
+```
+
+* **Your turn**: make a box-plot of the `tips` variable by `smoker` in the `tips` dataset.
+
+]
+
+---
+
 class: inverse, center, middle
 
 # Questions?
 
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html> 
+
 
 ---
 
 class: inverse, center, middle
 
-# Have a great weekend!
+# See you next week!
 
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=720px></html> 
+<html><div style='float:left'></div><hr color='#f2a900' size=1px width=720px></html>
