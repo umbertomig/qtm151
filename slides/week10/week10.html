@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 # QTM 151
-## Week 10 – lubridate
+## Week 10 – plotly (cont’d)
 <html>
 <div style="float:left">
 
@@ -57,21 +57,33 @@ class: center, middle, inverse, title-slide
 
 .font130[
 
-We learned:
- + `qplot`: quick way to make ggplot graphs.
- + `ggplotly` and `plot_ly`: create nice plotly graphs.
- + `dplyr` methods: data wrangling
+We've learned:
+ + Programming methods
  + `dplyr *_join` methods: joining data
  + `tidyr` methods: reshape datasets
  + `forcats` methods: working with categorical variables
+ + `lubridate` methods: to work with dates
+ + `qplot` methods: to create quick plots
+ + `ggplotly -- plotly` methods: create quick interactive plots.
+ 
+Do you have any questions about `ggplotly`?
 
-**Great job!!**
-
-Do you have any questions about any of these contents?
-
-Today we are going to talk about **lubridate** (package for dates and time)
+The quiz is posted. Good luck!
 
 Our GitHub page is: https://github.com/umbertomig/qtm151
+]
+
+---
+
+# Today's Agenda
+
+.font150[
+
+* `plot_ly` today:
+  - Scatter-plots
+  - Line-plots
+  - Bar-plots
+
 ]
 
 ---
@@ -99,9 +111,21 @@ library(tidyverse)
 
 ```
 ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
-## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   2.0.0     ✓ forcats 0.5.1
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1
+```
+
+```
+## Warning: package 'tidyr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'readr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'dplyr' was built under R version 4.1.2
 ```
 
 ```
@@ -111,383 +135,381 @@ library(tidyverse)
 ```
 
 ```r
-library(lubridate)
+# Loading plotly
+library(plotly)
 ```
 
 ```
 ## 
-## Attaching package: 'lubridate'
+## Attaching package: 'plotly'
 ```
 
 ```
-## The following objects are masked from 'package:base':
+## The following object is masked from 'package:ggplot2':
 ## 
-##     date, intersect, setdiff, union
+##     last_plot
+```
+
+```
+## The following object is masked from 'package:stats':
+## 
+##     filter
+```
+
+```
+## The following object is masked from 'package:graphics':
+## 
+##     layout
+```
+
+```r
+# Load gapminder
+library(gapminder)
 ```
 ]
 
 ---
 
+# Loading datasets
+
+.font130[
+
+```r
+# Loading tips dataset
+tips &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/tips.csv') # or your locale folder
+head(tips, 2)
+```
+
+```
+##   obs totbill  tip sex smoker day  time size
+## 1   1   16.99 1.01   F     No Sun Night    2
+## 2   2   10.34 1.66   M     No Sun Night    3
+```
+
+```r
+# Loading PErisk dataset
+PErisk &lt;- read.csv('https://raw.githubusercontent.com/umbertomig/qtm151/main/datasets/PErisk.csv') # or your locale folder
+head(PErisk, 2)
+```
+
+```
+##     country courts      barb2 prsexp2 prscorr2    gdpw2
+## 1 Argentina      0 -0.7207754       1        3  9.69017
+## 2 Australia      1 -6.9077550       5        4 10.30484
+```
+]
+
+---
+
+# Loading datasets
+
+
+```r
+# Gapminder
+head(gapminder, 2)
+```
+
+```
+## # A tibble: 2 × 6
+##   country     continent  year lifeExp     pop gdpPercap
+##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
+## 1 Afghanistan Asia       1952    28.8 8425333      779.
+## 2 Afghanistan Asia       1957    30.3 9240934      821.
+```
+
+---
 class: inverse, center, middle
 
-# lubridate
+# plot_ly: scatter-plots
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# lubridate
+# `plot_ly` Scatter-plots
 
 .font130[
-Provide tools to work with dates. The methods we will use in here are:
 
-* `ymd()`, `ydm()`, `mdy()`, `myd()`, `dmy()`, `dym()`: read text into data, provided in this order.
-* `parse_date_time()`: parse other date and time objects.
-* `make_date()` and `make_datetime()`: parse dates and times.
-* `round_dates()` and others: round dates and times.
-* `difftime()`: time/dates differences.
-* `now()` and `today()`: current dates and times.
-* `seconds()`, `dseconds()` and others: create time spans and durations.
-* `%--%` and date intervals: create and check date intervals.
+* It is very simple to build a plotly scatter-plot.
+
+* The most basic syntax is the following:
+```
+  plot_ly(data = data_set_here, 
+    x = ~x_axis_here, 
+    y = ~y_axis_here,
+    type = 'scatter')
+```
+
+- Let's try?!
 
 ]
 
 ---
 
-class: inverse, center, middle
+# plotly
 
-# Dates and Strings
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+```
+head(PErisk)
+plot_ly(data = PErisk, 
+  x = ~barb2, 
+  y = ~gdpw2)
+```
 
 ---
 
-# Dates and Strings
+# plot_ly Scatter-plots styling
 
 .font130[
-
-Without declare an object as a date, it is just a string.
-
-Check that in R (for ISO 8601):
-
-```
-dt &lt;- '2021-02-22'
-class(dt)
-str(dt)
-
-dt &lt;- as.Date(dt)
-class(dt)
-str(dt)
-```
+* We can change the style of our plot_ly. For example: we can change the dots and add text to markers:
 ]
 
-
----
-
-class: inverse, center, middle
-
-# ymd() and related functions
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# ymd() and related functions
-
-.font130[
-
-These functions are great to parse dates:
-
 ```
-x &lt;- "2010 September 20th"
-ymd(x)
-
-y &lt;- "02.01.2010"
-dmy(y)
-
-z &lt;- "Sep, 12th 2010 14:00"
-mdy_hm(z)
-
-a &lt;- "2016-07-08 12:34:56"
-ymd_hms(a)
-```
-]
-
----
-
-# ymd() and related functions
-
-.font130[
-
-**Your turn:** Turn into date:
-
-1. "2010-01-22"
-2. "12-02-1234 12:30:25"
-3. "May 18, 1933"
-4. "1st June 2012"
-
-]
-
----
-
-class: inverse, center, middle
-
-# parse_date_time
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# parse_date_time
-
-.font130[
-
-`parse_date_time()` takes two arguments: First, a vector with dates. Second, a vector with orders to parse.
-
-E. g.: `parse_date_time(date = "some_date", order = "some_order")`
-
-Some patterns:
-
-- `dmy`: day, month, year (4-digit)
-- `mdY`: month, day, year (2-digit)
-- `ymdHMS`: year (4-digit), month, day, hours, minutes, seconds
-
-For more: `help(parse_date_time)`
-]
-
----
-
-# parse_date_time
-
-.font130[
-
-Examples:
-
-```
-parse_date_time(c("11-01-2016", "2016 Jan 11th"),
-  order = c("dmy", "ymd"))
-parse_date_time("11-01-2016", order = "dmy")
+plot_ly(data = PErisk, x = ~barb2, y = ~gdpw2,
+        text = ~paste("Country: ", country), # Hover text
+        type = 'scatter',
+        marker = list(size = 10, # Markers characteristics
+                      color = 'red',
+                      line = list(color = 'black',
+                                  width = 2))) %&gt;%
+  layout(title = 'Informal Markets and GDP', # Layout
+         yaxis = list(zeroline = FALSE),
+         xaxis = list(zeroline = FALSE))
 ```
 
-**Your turn:** Parse:
-
-1. `x &lt;- c("April 13, 2003", "17 April 2005")`
-2. `y &lt;- "January 10, 2020 at 23:30:35"`
-
-]
-
 ---
 
-class: inverse, center, middle
-
-# make_date() and make_datetime()
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# make_date() and make_datetime()
-
-.font130[
-
-Both functions work to build date and time from pieces. The syntax for both functions is straightforward:
-
-```
-make_date(year = 2012, month = 3, day = 27)
-
-make_datetime(year = 1234, month = 5, day = 12, 
-  hour = 1, min = 23, sec = 45)
-```
-
-**Your turn:** make dates from:
-- yrs &lt;- c(1234, 1222, 2020)
-- mos &lt;- c(4, 2, 12)
-- dss &lt;- c(12, 12, 20)
-
-]
-
----
-
-class: inverse, center, middle
-
-# Extract parts functions
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# Extract parts functions
-
-.font130[
-
-- year(): Year with century
-- month(): Month
-- day(): Day of month
-- hour(): Hour
-- min(): Minute
-- second(): Second
-- wday(): Weekday
-- yday(): Day of year
-- tz(): Timezone
-- quarter(): Quarter
-- semester(): Semester
-
-]
-
----
-
-# Extract parts functions
+# `plot_ly` Scatter-plots qualitative coloring
 
 .font150[
+* We can also color our scatter-plot by a qualitative variable:
+]
 
-**Your turn:** Parse the dates and try these functions with:
+```
+PErisk$courts2 &lt;- factor(PErisk$courts, labels = c('Not Independent','Independent'))
+plot_ly(data = PErisk, x = ~barb2, y = ~gdpw2,
+        text = ~paste("Country: ", country), # Hover text
+        color = ~courts2, colors = c('blue', 'red'),
+        type = 'scatter', mode = 'markers',
+        marker = list(size = 10)) %&gt;%
+  layout(title = 'Informal Markets and GDP', # Layout
+         yaxis = list(zeroline = FALSE),
+         xaxis = list(zeroline = FALSE))
+```
+---
 
-1. "2010-01-22"
-2. "12-02-1234 12:30:25"
+# `plot_ly` 3D-Scatter-plots
 
+.font130[
+* It is also easy to build 3D scatterplots.
+
+* Here we plot infant mortality and GDP in the US by year.
+
+* Warning: the plot is very awkward.
+]
+
+```
+gmd &lt;- filter(gapminder, country == 'United States')
+plot_ly(data = gmd, x = ~year, y = ~gdpPercap, z = ~lifeExp,
+        color = ~year,
+        type = 'scatter3d', mode = 'markers',
+        marker = list(size = 10)) %&gt;%
+  layout(title = 'U.S. GDP and Life Expectancy by Year', # Layout
+         yaxis = list(zeroline = FALSE),
+         xaxis = list(zeroline = FALSE))
+```
+---
+
+# `plot_ly` Scatter-plots
+
+.font150[
+* **Your turn:** Create a `plot_ly` with `totbill` and `tip`. Then, change the title, remove the x and y zerolines, and display the weekday (`day`) in the text. Color by `time`.
 ]
 
 ---
 
 class: inverse, center, middle
 
-# round_dates() and others
+# plot_ly: line-plots
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# round_dates() and others
+# `plot_ly` Line Plots
 
 .font130[
 
-To round dates we can use:
+* Line plots are very useful for time series, such as stock prices.
 
-- `round_dates()`: round to the nearest precision.
-- `ceiling_date()`: round up the nearest precision.
-- `floor_dates()`: round down the nearest precision.
+* The most basic syntax is the following:
+```
+  plot_ly(data = data_set_here, 
+    x = ~x_axis_here, 
+    y = ~y_axis_here, 
+    type = 'scatter', 
+    mode = 'lines')
+```
 
-Precision units:
-
-- "second" , "minute" , "hour" , "day" , "week" , "month",
-"bimonth" , "quarter" , "halfyear" , "year", or multiples (e.g. "10 minutes")
+- Let's try?!
 
 ]
 
 ---
 
-# round_dates() and others
+# plot_ly: line-plots
+
+```
+gmd &lt;- filter(gapminder, country == 'United States')
+plot_ly(data = gmd, x = ~year, y = ~gdpPercap,
+    type = 'scatter', 
+    mode = 'lines') %&gt;%
+  layout(title = 'U.S. GDP per capita over time', # Layout
+         yaxis = list(title = 'GDP Per Capita'),
+         xaxis = list(title = 'Year'))
+```
+
+---
+
+# plot_ly: line-plots
 
 .font130[
-
-Examples:
-
-```
-d &lt;- ymd_hms("1234-04-03 07:13:28 UTC")
-floor_date(d, unit = 'day')
-
-# Round to nearest 5 minutes
-round_date(d, unit = '5 minutes')
-
-# Round up to week 
-ceiling_date(d, unit = 'week')
-
-# Fun
-ceiling_date(d, unit = 'hour') - floor_date(d, unit = 'hour')
-```
-
-**Your turn:** Round `d` in the three different ways: `d &lt;- ymd_hms("1981-08-18 18:08:28 UTC")`
-
+* We can add markers to the lines:
 ]
 
+```
+plot_ly(data = gmd, x = ~year, y = ~gdpPercap,
+    type = 'scatter', 
+    mode = 'lines+markers') %&gt;%
+  layout(title = 'U.S. GDP per capita over time', # Layout
+         yaxis = list(title = 'GDP Per Capita'),
+         xaxis = list(title = 'Year'))
+```
+
+---
+
+# plot_ly: line-plots with multiple lines
+
+.font130[
+* We can also add different countries:
+]
+
+```
+gmd &lt;- filter(gapminder, country %in% c('United States', 'Canada'))
+plot_ly(data = gmd, x = ~year, y = ~gdpPercap,
+  type = 'scatter', linetype = ~country,
+  mode = 'lines+markers') %&gt;%
+  layout(title = 'U.S. and Canada GDP per capita over time',
+         yaxis = list(title = 'GDP Per Capita'),
+         xaxis = list(title = 'Year'))
+```
+
+---
+
+# plot_ly: line-plots with multiple lines
+
+.font130[
+* We can also plot all countries in the same chart.
+]
+
+```
+plot_ly(data = gapminder, x = ~year, y = ~log(gdpPercap)) %&gt;%
+  add_lines(color =~country) %&gt;%
+  hide_legend()
+```
+---
+
+# plot_ly: line-plots with multiple lines
+
+.font130[
+* And change the color of a desired country.
+]
+
+```
+gapminder %&gt;%
+  group_by(country) %&gt;%
+  plot_ly(x = ~year, y = ~log(gdpPercap)) %&gt;%
+  add_lines(text = 'All Countries', alpha=I(0.2)) %&gt;%
+  filter(country=="United States") %&gt;%
+  add_lines(name="United States", color=I("blue")) %&gt;%
+  add_lines(data = filter(gapminder, country=="Canada"),
+    name="Canada", color=I("red"))
+```
+---
+
+# plot_ly: line-plots
+
+.font150[
+* **Your turn:** In the `gapminder` dataset, select three countries of your choice and plot them.
+]
 ---
 
 class: inverse, center, middle
 
-# difftime
+# plot_ly: bar-plots
 
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
 
 ---
 
-# difftime
+# `plot_ly` Bar-plots
 
 .font130[
 
-We can find difference between two dates using difftime.
+* Bar plots are great to visualize qualitative data.
 
+* The most basic syntax is the following:
 ```
-difftime(today(), mdy("May 20, 2020"), units = 'days')
-difftime(now(), mdy_hms("May 20, 2020 22:12:22"), units = 'secs')
+  plot_ly(data = data_set_here, 
+    x = ~x_axis_here, 
+    y = ~y_axis_here, 
+    type = 'bar')
 ```
 
-**Your turn:** Find how many seconds since your birthday.
+- Let's try?!
 
 ]
 
 ---
 
-class: inverse, center, middle
+# plot_ly: bar-plots
 
-# seconds(), dseconds() and other duration functions
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
+```
+tbl &lt;- table(PErisk$prsexp2); tbl &lt;- as.data.frame(tbl)
+plot_ly(data = tbl, x = ~Var1, y = ~Freq,
+  type = 'bar') %&gt;%
+  layout(title = 'Expropriation Risk in 1992', # Layout
+         xaxis = list(title = 'Expropriation Risk (high to low)'))
+```
 
 ---
 
-# seconds(), dseconds() and other duration functions
+# plot_ly: bar-plots
 
 .font130[
-
-We can use duration to change dates:
-
-```
-today() - years(1)
-today() + months(1)
-days(2)
-ddays(2)
-now() + seconds(20)
-2*days()
-```
-
-**Your turn:** Find how many seconds since your birthday.
-
+* We can add multiple bars to the barplot:
 ]
 
----
-
-class: inverse, center, middle
-
-# Intervals
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#f2a900' size=1px width=720px&gt;&lt;/html&gt; 
-
----
-
-# Intervals
-
-.font130[
-
-We can also compute intervals:
-
 ```
-x &lt;- dmy("2 January 1998") %--% dmy("30 March 2018")
-y &lt;- dmy("2 January 2017") %--% dmy("30 March 2020")
-int_start(x)
-int_end(x)
-int_length(x)
-as.period(x)
-dmy("5 January 1998") %within% x
-dmy("5 January 1998") %within% y
-int_overlaps(x, y)
+tbl &lt;- table(PErisk$prsexp2); tbl &lt;- as.data.frame(tbl)
+tbl2 &lt;- table(PErisk$prscorr2); tbl2 &lt;- as.data.frame(tbl2)
+dat &lt;- data.frame(Risk = tbl$Var1, exprop = tbl$Freq, corrup = tbl2$Freq)
+plot_ly(data = dat, x = ~Risk, y = ~exprop,
+  type = 'bar', name = 'Expropriation Risk') %&gt;%
+  add_trace(y = ~corrup, name = 'Corruption Risk') %&gt;%
+  layout(title = 'Investment Risks in 1992', # Layout
+         yaxis = list(title = 'Frequencies'),
+         xaxis = list(title = 'Risks'),
+         barmode = 'group')
 ```
 
-**Your turn:** Compute one interval between your birthday and today. Check it. Does it contains the date `January 20 2000`?
+---
 
+# plot_ly: bar-plots
+
+.font150[
+* **Your turn:** In the `tips` dataset, create a barplot with gender and days that the person goes to a pub.
 ]
-
 ---
-
 
 class: inverse, center, middle
 
@@ -509,7 +531,6 @@ class: inverse, center, middle
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "ratio": "4:3",
-"self-contained": false,
 "highlightLines": true,
 "countIncrementalSlides": false,
 "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>"
