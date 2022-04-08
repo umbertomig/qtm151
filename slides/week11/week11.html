@@ -56,21 +56,21 @@ class: center, middle, inverse, title-slide
 # Recap
 
 .font130[
-
-We learned:
- + `qplot`: quick way to make ggplot graphs.
- + `ggplotly` and `plot_ly`: create nice plotly graphs.
- + `dplyr` methods: data wrangling
+We've learned:
+ + Programming methods
  + `dplyr *_join` methods: joining data
  + `tidyr` methods: reshape datasets
  + `forcats` methods: working with categorical variables
- + `lubridate` methods: processing dates and times
+ + `lubridate` methods: to work with dates
+ + `qplot` methods: to create quick plots
+ + `plotly` methods: create beautiful interactive plots.
+ 
+**Great job!!** Do you have any questions about these contents?
 
-**Great job!!** Do you have any questions about any of these contents?
+Reminder: **no class next Friday**. I'll be at a conference.
 
-Today we are going to talk about how to make maps in R.
+Today we will learn how to make **maps in R**. Our GitHub page is: https://github.com/umbertomig/qtm151
 
-Our GitHub page is: https://github.com/umbertomig/qtm151
 ]
 
 ---
@@ -98,9 +98,21 @@ library(tidyverse)
 
 ```
 ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
-## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-## ✓ readr   2.0.0     ✓ forcats 0.5.1
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1
+```
+
+```
+## Warning: package 'tidyr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'readr' was built under R version 4.1.2
+```
+
+```
+## Warning: package 'dplyr' was built under R version 4.1.2
 ```
 
 ```
@@ -216,7 +228,7 @@ ggmap(map) + geom_point(data=data1,
 
 .font130[
 
-Let's now plot the number of flights from each destination.
+Let's plot the number of flights from each destination.
 
 ```
 data2&lt;-flights %&gt;%
@@ -270,8 +282,8 @@ The structure of the data needed:
 * `lat`:  latitude.
 * `order`: shows in which order ggplot should “connect the dots”
 * `region` and `subregion`: tell what region or subregion a set of points surrounds.
-* `group`: ggplot2’s functions can take a group argument, which controls whether adjacent points should be connected by lines. 
-  + If they are in the same group, then they get connected, but if they are in different groups then they don't.
+* `group`: ggplot2’s functions can take a group argument, which controls whether lines should connect adjacent points. 
+  + If they are in the same group, they get connected, but if they are in different groups, they don't.
 
 ]
 
@@ -281,7 +293,7 @@ The structure of the data needed:
 
 Plot the USA map using *geom_polygon()*.
 
-*geom_polygon()* drawn lines between points and “closes them up” (i.e. draws a line from the last point back to the first point). 
+*geom_polygon()* draws lines between points and “closes them up” (i.e. draws a line from the last point back to the first point). 
 
 You have to map the group aesthetic to the group column.
 
@@ -363,8 +375,8 @@ But we can do better:
 
 * group() 
 
-* coord_fixed(): it fixes the relationship between one unit in the y direction and one unit in the x direction. 
- + Every y unit was 1.3 times longer than an x unit, the plot came out looking good.
+* coord_fixed(): it fixes the relationship between one unit in the y-direction and one in the x-direction. 
+ + Every y unit was 1.3 times longer than an x unit. The plot came out looking good.
 
 ```
 ggplot(data = west_coast) + 
@@ -425,7 +437,7 @@ ga_base + theme_void()
 
 The package maps also have subregions and subdivisions within a given country.
 
-This is handful to plot counties in Georgia:
+This is helpful to plot counties in Georgia:
 
 ```
 county_df &lt;- map_data("county") %&gt;% filter(region == "georgia")
@@ -443,7 +455,7 @@ ga_base + theme_void() +
 
 .font130[
 
-And in the GAdat we have the population by county. We can plot this in the Georgia map:
+And in the GAdat, we have the population by county. We can plot this in the Georgia map:
 
 ```
 county_df$subregion &lt;- replace(county_df$subregion, county_df$subregion=="de kalb", "dekalb")
@@ -478,7 +490,6 @@ ggplot(mapdat, aes(long, lat, group = group)) +
 ```
 ]
 ---
-
 
 class: inverse, center, middle
 
